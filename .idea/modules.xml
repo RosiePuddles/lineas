@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/linear.iml" filepath="$PROJECT_DIR$/.idea/linear.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/lineas.iml" filepath="$PROJECT_DIR$/.idea/lineas.iml" />
     </modules>
   </component>
 </project>

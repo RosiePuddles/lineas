@@ -1,0 +1,16 @@
+[package]
+name = "lineas"
+description = "A fast linear algebra library for Rust"
+version = "0.1.0"
+edition = "2021"
+authors = ["nxe<62428909+RosiePuddles@users.noreply.github.com>"]
+categories = ["mathematics"]
+license-file = "LICENSE"
+repository =
+
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+conv = "0.3.3"
+itertools = "0.10.3"
