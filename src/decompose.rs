@@ -25,6 +25,17 @@ pub mod lu_decompose {
 		/// The LU decomposition of a matrix `A` is two matrices `L` and `U` that are lower and
 		/// upper matrices respectively such that `LU=A`. For some matrices this decomposition is
 		/// not possible so we return an `Option<(Self, Self)>` enum.
+		///
+		/// For example
+		/// ```
+		/// # use lineas::Matrix;
+		/// # #[allow(non_snake_case)]
+		/// let A = Matrix::new([[2, -2], [-12, 16]]);
+		/// # #[allow(non_snake_case)]
+		/// let L = Matrix::new([[1, 0], [-3, 2]]);
+		/// # #[allow(non_snake_case)]
+		/// let U = Matrix::new([[4, -2], [0, 5]]);
+		/// assert_eq!(A, L * U)
 		pub fn lu_decompose(&self) -> Option<(Self, Self)> {
 			let mut upper = self.clone();
 			let mut lower = Self::empty();

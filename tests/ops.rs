@@ -1,4 +1,4 @@
-use lineas::prelude::Matrix;
+use lineas::Matrix;
 
 #[cfg(test)]
 mod unary_not {
@@ -129,7 +129,7 @@ mod mult {
 		fn rect() {
 			let lhs1 = Matrix::new([[9, 17], [3, 0], [42, 69], [1, 7]]);
 			let lhs2 = Matrix::new([[-4, 8, 12, -19], [2, -10, 42, 76]]);
-			let rhs = Matrix::new([[-2, -98, 543, 1121], [-12, 24, -57, -57], [-30, -354, 2100, 4446], [10, -62, 275, 513]]);
+			let rhs = Matrix::new([[-2, -98, 822, 1121], [-12, 24, 36, -57], [-30, -354, 3402, 4446], [10, -62, 306, 513]]);
 			assert_eq!(lhs1 * lhs2, rhs)
 		}
 	}

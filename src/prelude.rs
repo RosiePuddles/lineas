@@ -14,7 +14,7 @@ use std::fmt::Debug;
 ///
 /// For example
 /// ```
-/// use lineas::prelude::Matrix;
+/// use lineas::Matrix;
 /// let matrix: Matrix<2, 2, f64> = Matrix::new([[1, 0], [0, 1]]).dtype::<f64>();
 /// ```
 /// This gives us an identity matrix of size 2 with each value being an `f64` instead of `{integer}`

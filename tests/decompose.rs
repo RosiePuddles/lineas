@@ -1,4 +1,4 @@
-use lineas::prelude::Matrix;
+use lineas::Matrix;
 
 #[cfg(test)]
 mod lu_decompose {
@@ -14,5 +14,9 @@ mod lu_decompose {
 		assert_eq!(u, u_check);
 	}
 	
-	
+	#[test]
+	fn incorrect() {
+		let a = Matrix::new([[0, 1], [1, 1]]);
+		assert!(a.lu_decompose().is_none())
+	}
 }

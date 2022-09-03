@@ -1,4 +1,4 @@
-use lineas::prelude::Matrix;
+use lineas::Matrix;
 
 #[cfg(test)]
 mod det {

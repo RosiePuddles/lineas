@@ -75,7 +75,7 @@ impl<const T: usize, const N: usize, const P: usize, L: Copy + Debug + ValueFrom
 			for j in 0..T {
 				let mut res: L = 0.value_as().unwrap();
 				for k in 0..N {
-					res = res + self.0[i][k] * rhs.0[k][j];
+					res = res + (self.0[i][k] * rhs.0[k][j]);
 				}
 				data[i][j] = res;
 			}

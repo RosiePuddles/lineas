@@ -9,13 +9,13 @@
 //!	Matrices need you to specify the size of the matrix (rows×columns) and the data type in the
 //! matrix.
 //! ```
-//! # use lineas::prelude::Matrix;
+//! # use lineas::Matrix;
 //! let mut matrix: Matrix<2, 2, isize> = Matrix::new([[1, 0], [0, 1]]);
 //! ```
 //! You can alter the data type, or dtype, with the [`dtype`](prelude::Matrix::dtype) function and specify the
 //! desired dtype. The desired dtype has to satisfy some trait constraits
 //! ```
-//! # use lineas::prelude::Matrix;
+//! # use lineas::Matrix;
 //! # let mut matrix: Matrix<2, 2, isize> = Matrix::new([[1, 0], [0, 1]]);
 //! let matrix: Matrix<2, 2, f32> = matrix.dtype::<f32>();
 //! ```
@@ -30,6 +30,7 @@
 //! ```
 //! or replace `*` with the specific decomposition(s) you need
 pub mod prelude;
+pub use prelude::*;
 pub mod decompose;
 pub mod generics;
 mod ops;
