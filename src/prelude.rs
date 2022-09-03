@@ -3,7 +3,6 @@
 //! This defined the matrix and vector as well as some simple operation implementations for
 //! matrices. More complex operations are defined in other places
 use std::fmt::Debug;
-use conv::ValueFrom;
 
 /// Matrix struct
 ///

@@ -1,4 +1,5 @@
 #![warn(missing_docs)]
+#![doc(issue_tracker_base_url = "https://github.com/RosiePuddles/lineas/issues/")]
 //! # Linear algebra in Rust
 //!
 //! This library gives a wide range of functionality to [matrices](prelude::Matrix) and [vectors](prelude::Vector) in Rust using fast

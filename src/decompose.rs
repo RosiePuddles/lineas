@@ -1,18 +1,30 @@
+//! Decomposition modules
+//!
+//! This module includes modules for decomposition functions for matrices. To use a specific
+//! decomposition you need to include the module which will include the implementation.
+//!
+//! For example to include LU decomposition, you would have
+//!```
+//! # use lineas::prelude;
+//! use lineas::decompose::lu_decompose;
+//!```
+
 use std::fmt::Debug;
 use std::ops::{Div, Mul, Sub};
 use conv::{ConvUtil, ValueFrom};
 use crate::prelude::Matrix;
 
-/// LU Decomposition
+/// LU decomposition module
 ///
-/// Attempts to turn a square matrix into a lower and upper matrix such that the lower multiplied by
-/// the upper results in the original matrix.
-///
-/// This will fail if during the process of constructing the upper matrix a 0 is found along the
-/// diagonal. This does not mean that a 0 cannot occur in the diagonal of the original matrix
+/// For more information see the [`lu_decompose` function][Matrix::lu_decompose]
 pub mod lu_decompose {
 	use super::*;
 	impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> where L: ValueFrom<isize> + Div<Output=L> + Mul<Output=L> + Sub<Output=L> + PartialEq {
+		/// Generate the LU decomposition of a square matrix
+		///
+		/// The LU decomposition of a matrix `A` is two matrices `L` and `U` that are lower and
+		/// upper matrices respectively such that `LU=A`. For some matrices this decomposition is
+		/// not possible so we return an `Option<(Self, Self)>` enum.
 		pub fn lu_decompose(&self) -> Option<(Self, Self)> {
 			let mut upper = self.clone();
 			let mut lower = Self::empty();
@@ -39,11 +51,11 @@ pub mod lu_decompose {
 	}
 }
 
-pub mod plu_decompose {
-	use super::*;
-	impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> where L: ValueFrom<isize> + Div<Output=L> + Mul<Output=L> + Sub<Output=L> + PartialEq {
-		pub fn plu_decompose(&self) -> Option<(Self, Self, Self)> {
-			None
-		}
-	}
-}
+// pub mod plu_decompose {
+// 	use super::*;
+// 	impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> where L: ValueFrom<isize> + Div<Output=L> + Mul<Output=L> + Sub<Output=L> + PartialEq {
+// 		pub fn plu_decompose(&self) -> Option<(Self, Self, Self)> {
+// 			None
+// 		}
+// 	}
+// }

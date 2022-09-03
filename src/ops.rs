@@ -65,13 +65,17 @@ impl<const T: usize, const N: usize, L: Copy + Debug + ValueFrom<isize>> MulAssi
 impl<const T: usize, const N: usize, const P: usize, L: Copy + Debug + ValueFrom<isize>> Mul<Matrix<N, P, L>> for Matrix<T, N, L> where L: Add<Output=L> + AddAssign + Mul<Output=L> + ValueFrom<isize> {
 	type Output = Matrix<T, P, L>;
 	
+	/// Multiply two matrices together
+	///
+	/// The first matrix must have the same number of rows as the second matrix has columns
+	/// otherwise multiplication is not defined
 	fn mul(self, rhs: Matrix<N, P, L>) -> Self::Output {
 		let mut data = [[0.value_as().unwrap(); P]; T];
 		for i in 0..P {
 			for j in 0..T {
 				let mut res: L = 0.value_as().unwrap();
 				for k in 0..N {
-					res = res + self[(i, k)] * rhs[(k, j)];
+					res = res + self.0[i][k] * rhs.0[k][j];
 				}
 				data[i][j] = res;
 			}
@@ -120,6 +124,7 @@ impl<const T: usize, const N: usize, L: Copy + Debug> PartialEq for Matrix<T, N,
 }
 
 impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
+	/// Generate a new matrix from a given array `[[L; N]; T]`
 	pub fn new(data: [[L; N]; T]) -> Self {
 		Self(data)
 	}
