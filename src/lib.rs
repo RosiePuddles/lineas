@@ -34,3 +34,6 @@ pub use prelude::*;
 pub mod decompose;
 pub mod generics;
 mod ops;
+mod complex_ops;
+pub mod polynomials;
+mod display;

@@ -3,8 +3,9 @@
 use crate::prelude::{Matrix, Vector};
 use std::fmt::Debug;
 use std::ops::{Add, Sub, Index, AddAssign, IndexMut, SubAssign, Mul, MulAssign, Neg};
-use conv::{ConvUtil, ValueFrom};
+use conv::{ConvUtil, ValueFrom, ValueInto};
 use itertools::Itertools;
+use crate::Complex;
 
 impl<const T: usize, const N: usize, L: Copy + Debug> Add for Matrix<T, N, L> where L: Add + AddAssign {
 	type Output = Self;
@@ -46,6 +47,31 @@ impl<const T: usize, const N: usize, L: Copy + Debug> SubAssign for Matrix<T, N,
 	}
 }
 
+impl<const T: usize, const N: usize, const P: usize, L: Copy + Debug + ValueFrom<isize>> Mul<Matrix<N, P, L>> for Matrix<T, N, L> where L: Add<Output=L> + AddAssign + Mul<Output=L> + ValueFrom<isize> {
+	type Output = Matrix<T, P, L>;
+	
+	/// Multiply two matrices together
+	///
+	/// The first matrix must have the same number of rows as the second matrix has columns
+	/// otherwise multiplication is not defined
+	///
+	/// Note that matrix multiplication is not commutative; i.e. `A*B` is not necessarily the same
+	/// as `B * A`.
+	fn mul(self, rhs: Matrix<N, P, L>) -> Self::Output {
+		let mut data = [[0.value_as().unwrap(); P]; T];
+		for i in 0..P {
+			for j in 0..T {
+				let mut res: L = 0.value_as().unwrap();
+				for k in 0..N {
+					res = res + (self.0[i][k] * rhs.0[k][j]);
+				}
+				data[i][j] = res;
+			}
+		}
+		Matrix::new(data)
+	}
+}
+
 impl<const T: usize, const N: usize, L: Copy + Debug + ValueFrom<isize>> MulAssign<Matrix<N, N, L>> for Matrix<T, N, L> where L: Add<Output=L> + AddAssign + Mul<Output=L> + ValueFrom<isize> {
 	fn mul_assign(&mut self, rhs: Matrix<N, N, L>) {
 		let mut data = [[0.value_as().unwrap(); N]; T];
@@ -59,28 +85,6 @@ impl<const T: usize, const N: usize, L: Copy + Debug + ValueFrom<isize>> MulAssi
 			}
 		}
 		self.0 = data;
-	}
-}
-
-impl<const T: usize, const N: usize, const P: usize, L: Copy + Debug + ValueFrom<isize>> Mul<Matrix<N, P, L>> for Matrix<T, N, L> where L: Add<Output=L> + AddAssign + Mul<Output=L> + ValueFrom<isize> {
-	type Output = Matrix<T, P, L>;
-	
-	/// Multiply two matrices together
-	///
-	/// The first matrix must have the same number of rows as the second matrix has columns
-	/// otherwise multiplication is not defined
-	fn mul(self, rhs: Matrix<N, P, L>) -> Self::Output {
-		let mut data = [[0.value_as().unwrap(); P]; T];
-		for i in 0..P {
-			for j in 0..T {
-				let mut res: L = 0.value_as().unwrap();
-				for k in 0..N {
-					res = res + (self.0[i][k] * rhs.0[k][j]);
-				}
-				data[i][j] = res;
-			}
-		}
-		Matrix::new(data)
 	}
 }
 
@@ -112,21 +116,20 @@ impl<const T: usize, const N: usize, L: Copy + Debug> IndexMut<(usize, usize)> f
 	}
 }
 
-impl<const T: usize, const N: usize, L: Copy + Debug> PartialEq for Matrix<T, N, L> where L: PartialEq {
-	fn eq(&self, other: &Self) -> bool {
-		for i in 0..N {
-			for n in 0..T {
-				if self.0[n][i] != other.0[n][i] { return false }
-			}
-		}
-		true
-	}
-}
-
 impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 	/// Generate a new matrix from a given array `[[L; N]; T]`
 	pub fn new(data: [[L; N]; T]) -> Self {
 		Self(data)
+	}
+	
+	pub fn conj<Q: Copy + Debug>(&self) -> Matrix<T, N, Complex<Q>> where L: ValueFrom<isize> + ValueInto<Complex<Q>>, Q: Neg<Output=Q> + ValueFrom<isize> {
+		let mut data = [[Complex::from_real(0.value_as().unwrap()); N]; T];
+		for n in 0..T {
+			for m in 0..N {
+				data[n][m] = self.0[n][m].value_into().unwrap().conj()
+			}
+		}
+		Matrix::new(data)
 	}
 }
 

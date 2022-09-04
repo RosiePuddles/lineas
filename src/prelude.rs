@@ -18,10 +18,22 @@ use std::fmt::Debug;
 /// let matrix: Matrix<2, 2, f64> = Matrix::new([[1, 0], [0, 1]]).dtype::<f64>();
 /// ```
 /// This gives us an identity matrix of size 2 with each value being an `f64` instead of `{integer}`
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Matrix<const T: usize, const N: usize, L: Copy + Debug> (pub(crate) [[L; N]; T] );
 
 /// Vector struct
 ///
 /// Derived from the [matrix][Matrix] and is technically a 1×`T` matrix
 pub type Vector<const T: usize, L> = Matrix<1, T, L>;
+
+/// Complex number struct
+///
+/// This contains two values, a real and an imaginary. It does complex number things as you would
+/// expect.
+///
+/// To generate a new
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct Complex<L: Copy + Debug> {
+	pub(crate) real: L,
+	pub(crate) imaginary: L
+}
