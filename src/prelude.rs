@@ -3,6 +3,10 @@
 //! This defined the matrix and vector as well as some simple operation implementations for
 //! matrices. More complex operations are defined in other places
 use std::fmt::Debug;
+use std::ops::Add;
+use conv::{ConvUtil, ValueFrom};
+use crate::traits::{Abs, Pows};
+use crate::constants::PI;
 
 /// Matrix struct
 ///
@@ -23,8 +27,18 @@ pub struct Matrix<const T: usize, const N: usize, L: Copy + Debug> (pub(crate) [
 
 /// Vector struct
 ///
+/// This is a row vector. For a column vector see the [`ColVector'][ColVector] struct
+///
 /// Derived from the [matrix][Matrix] and is technically a 1×`T` matrix
+#[doc(alias="RowVector")]
 pub type Vector<const T: usize, L> = Matrix<1, T, L>;
+
+/// Column Vector struct
+///
+/// For a row vector see the [`Vector'][Vector] struct
+///
+/// Derived from the [matrix][Matrix] and is technically a `T`×1 matrix
+pub type ColVector<const T: usize, L> = Matrix<T, 1, L>;
 
 /// # Norm enum
 ///
@@ -66,4 +80,26 @@ impl<Q: Debug> Norm<Q> where Q: ValueFrom<isize> + Copy + Add<Output=Q> + Pows +
 pub struct Complex<L: Copy + Debug> {
 	pub(crate) real: L,
 	pub(crate) imaginary: L
+}
+
+/// Angle enum
+///
+/// Crate-wide enum for holding angles
+pub enum Angle {
+	/// Angle in degrees
+	Degrees(f64),
+	/// Angle in radians
+	Radians(f64),
+	/// Angle in gradians
+	Gradians(f64)
+}
+
+impl Angle {
+	pub(crate) fn angle(&self) -> f64 {
+		match self {
+			Angle::Degrees(v) => *v * PI / 180.,
+			Angle::Radians(v) => *v,
+			Angle::Gradians(v) => *v * PI / 50.
+		}
+	}
 }

@@ -122,6 +122,10 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 		Self(data)
 	}
 	
+	/// Conjugate of the matrix
+	///
+	/// If the matrix is not already, make it a complex matrix and calculate the conjugate of each
+	/// element.
 	pub fn conj<Q: Copy + Debug>(&self) -> Matrix<T, N, Complex<Q>> where L: ValueFrom<isize> + ValueInto<Complex<Q>>, Q: Neg<Output=Q> + ValueFrom<isize> {
 		let mut data = [[Complex::from_real(0.value_as().unwrap()); N]; T];
 		for n in 0..T {
@@ -130,6 +134,17 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 			}
 		}
 		Matrix::new(data)
+	}
+	
+	/// Sums all the elements of a matrix
+	pub fn sum(&self) -> L where L: Add<Output=L> + ValueFrom<isize> {
+		self.0.iter().fold(
+			0.value_as().unwrap(),
+			|acc, l| acc + l.iter().fold(
+				0.value_as().unwrap(),
+				|acc2, t| acc2 + *t
+			)
+		)
 	}
 }
 

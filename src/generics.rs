@@ -6,6 +6,7 @@
 use std::fmt::Debug;
 use crate::prelude::Matrix;
 use conv::{ConvUtil, ValueFrom};
+use crate::Angle;
 
 impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> where L: ValueFrom<isize> {
 	/// Generate an identity matrix of a specified size.
@@ -13,7 +14,6 @@ impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> where L: ValueFrom<isize> 
 	/// This will only work for a `Matrix<T, T, L>` matrix
 	/// ```
 	/// # use lineas::prelude::Matrix;
-	/// use lineas::generics;
 	/// assert_eq!(Matrix::new([[1, 0], [0, 1]]), Matrix::<2, 2, _>::identity())
 	/// ```
 	pub fn identity() -> Self {
@@ -25,11 +25,24 @@ impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> where L: ValueFrom<isize> 
 	}
 }
 
+impl<L: Copy + Debug> Matrix<2, 2, L> where L: ValueFrom<f64> + ValueFrom<isize> {
+	/// Generate a 2D rotation matrix for a specified angle
+	///
+	/// This will only work for a `Matrix<T, T, L>` matrix
+	/// ```
+	/// # use lineas::prelude::Matrix;
+	/// assert_eq!(Matrix::new([[1, 0], [0, 1]]), Matrix::<2, 2, _>::identity())
+	/// ```
+	pub fn rotation(angle: Angle) -> Self {
+		let angle = angle.angle();
+		Matrix::new([[angle.cos(), -angle.sin()], [angle.sin(), angle.cos()]]).dtype::<L>()
+	}
+}
+
 impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> where L: ValueFrom<isize> {
 	/// Generate an empty matrix of a specified size
 	/// ```
 	/// # use lineas::prelude::Matrix;
-	/// use lineas::generics;
 	/// assert_eq!(Matrix::new([[0, 0, 0], [0, 0, 0]]), Matrix::<3, 2, _>::empty())
 	/// ```
 	pub fn empty() -> Self {
