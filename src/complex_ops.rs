@@ -28,10 +28,10 @@ impl<L: Copy + Debug> Complex<L> where L: ValueFrom<isize> {
 	///
 	/// Generates a complex value with the given real and imaginary parts. These must be the same
 	/// type
-	pub fn from_complex<Q>(r: L, i: Q) -> Self where L: ValueFrom<Q> {
+	pub fn from_complex(r: L, i: L) -> Self {
 		Self {
 			real: r,
-			imaginary: i.value_as().unwrap()
+			imaginary: i
 		}
 	}
 	
