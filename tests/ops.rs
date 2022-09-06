@@ -108,6 +108,7 @@ mod mult {
 	
 	#[cfg(test)]
 	mod matrix {
+		use lineas::{cvector, vector};
 		use super::*;
 		
 		#[test]
@@ -130,6 +131,22 @@ mod mult {
 			let lhs1 = Matrix::new([[9, 17], [3, 0], [42, 69], [1, 7]]);
 			let lhs2 = Matrix::new([[-4, 8, 12, -19], [2, -10, 42, 76]]);
 			let rhs = Matrix::new([[-2, -98, 822, 1121], [-12, 24, 36, -57], [-30, -354, 3402, 4446], [10, -62, 306, 513]]);
+			assert_eq!(lhs1 * lhs2, rhs)
+		}
+		
+		#[test]
+		fn vector_matrix() {
+			let lhs1 = vector!([1, 2, 3, 4]);
+			let lhs2 = Matrix::new([[9, 17], [3, 0], [42, 69], [1, 7]]);
+			let rhs = vector!([145, 252]);
+			assert_eq!(lhs1 * lhs2, rhs)
+		}
+		
+		#[test]
+		fn matrix_cvector() {
+			let lhs1 = Matrix::new([[-5, 4, 0], [2, 0, 15]]);
+			let lhs2 = cvector!([-2, 3, 5]);
+			let rhs = cvector!([22, 71]);
 			assert_eq!(lhs1 * lhs2, rhs)
 		}
 	}

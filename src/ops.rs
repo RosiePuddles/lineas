@@ -218,6 +218,15 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 			}
 		}
 	}
+	
+	/// Returns the trace of a matrix
+	pub fn trace(&self) -> L where L: ValueFrom<isize> + Add<Output=L> {
+		let mut out = 0.value_as().unwrap();
+		for i in 0..N {
+			out  = out + self.0[i][i]
+		}
+		out
+	}
 }
 
 impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> {
