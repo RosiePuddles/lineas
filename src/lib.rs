@@ -37,3 +37,4 @@ mod ops;
 mod complex_ops;
 pub mod polynomials;
 mod display;
+pub mod traits;
