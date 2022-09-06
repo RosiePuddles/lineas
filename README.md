@@ -1,4 +1,4 @@
-<div style="text-align: center;">
+<div style="text-align: center;" align="center">
 <h1>Lineas</h1>
 <h3>Linear algebra in Rust</h3>
 <img src="https://img.shields.io/crates/v/lineas.svg" alt="crate.io version badge">
