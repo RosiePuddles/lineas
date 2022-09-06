@@ -10,7 +10,7 @@ repository = "https://github.com/RosiePuddles/lineas"
 homepage = "https://github.com/RosiePuddles/lineas"
 documentation = "https://docs.rs/crate/lineas"
 readme = "README.md"
-keywords = ["maths", "linear-algebra"]
+keywords = ["maths", "linear-algebra", "algebra", "matrix", "vector"]
 
 [badges]
 maintenance = { status = "actively-developed" }
@@ -18,6 +18,7 @@ maintenance = { status = "actively-developed" }
 [dependencies]
 conv = "0.3.3"
 itertools = "0.10.3"
+num-integer = "0.1.45"
 plotters = { version = "0.3.3", optional = true}
 
 [features]
