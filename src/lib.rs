@@ -39,5 +39,6 @@ pub mod polynomials;
 mod display;
 mod vector_ops;
 pub mod traits;
+use traits::*;
 pub mod constants;
 mod impls;

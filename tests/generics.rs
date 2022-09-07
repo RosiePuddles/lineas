@@ -18,5 +18,5 @@ fn empty() {
 fn rotate() {
 	let lhs = Matrix::rotation(Angle::Degrees(180.));
 	let rhs = Matrix::new([[-1., 0.], [0., -1.]]);
-	assert!((lhs - rhs).sum() < 4. * f64::EPSILON)
+	assert_eq!(lhs.epsilon_filter(), rhs)
 }

@@ -5,7 +5,7 @@ use std::ops::{Add, Mul, Neg};
 use conv::{ConvUtil, ValueFrom, ValueInto};
 use itertools::Itertools;
 use crate::Complex;
-use crate::traits::Abs;
+use crate::traits::{Abs, Epsilon};
 
 impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 	/// Generate a new matrix from a given array `[[L; N]; T]`
@@ -126,6 +126,27 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 			out  = out + self.0[i][i]
 		}
 		out
+	}
+	
+	/// Filters out small values using the [`Epsilon`][crate::traits::Epsilon] trait
+	///
+	/// This is implemented by default for `f32`, `f64`, `Complex<f32>`, and `Complex<f64>`
+	///
+	/// This is intended for use with function that will inherently be slightly inaccurate such
+	/// trigonometric function. A good sample use would be rotation matrices
+	/// ```
+	/// # use lineas::prelude::Matrix;
+	/// use lineas::Angle;
+	/// Matrix::rotation(Angle::Degrees(180.)).epsilon_filter()
+	/// ```
+	pub fn epsilon_filter(&self) -> Self where L: Epsilon + PartialEq {
+		let mut out = self.0.clone();
+		for i in 0..T {
+			for n in 0..N {
+				out[i][n] = out[i][n].epsilon()
+			}
+		}
+		Matrix(out)
 	}
 }
 

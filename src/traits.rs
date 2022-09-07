@@ -25,6 +25,16 @@ pub trait Pows {
 	fn root_n(&self, p: Self) -> Self;
 }
 
+/// Epsilon trait for use in filtering out small values
+pub trait Epsilon where Self: PartialEq {
+	/// This should return the filtered version of a given value
+	/// ```
+	/// # use lineas::traits::Epsilon;
+	///	assert_eq!(f64::EPSILON.epsilon(), 0f64)
+	/// ```
+	fn epsilon(&self) -> Self;
+}
+
 macro_rules! int {
     ($t:ty) => {
 		impl Abs for $t {
@@ -77,6 +87,11 @@ macro_rules! float {
 			
 			fn root_n(&self, p: Self) -> $t {
 				self.powf(1. / p)
+			}
+		}
+		impl Epsilon for $t {
+			fn epsilon(&self) -> $t {
+				if self.abs() < <$t>::EPSILON { 0. } else { *self }
 			}
 		}
 	};

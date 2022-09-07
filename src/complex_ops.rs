@@ -1,7 +1,7 @@
 use std::fmt::{Debug, Display, Error, Formatter};
 use std::ops::{Add, Sub, AddAssign, SubAssign, Mul, MulAssign, Div, DivAssign, Neg};
 use conv::{ConvUtil, ValueFrom};
-use crate::Complex;
+use crate::{Complex, Epsilon};
 use crate::traits::{Abs, Pows};
 
 impl<L: Copy + Debug> Complex<L> {
@@ -184,5 +184,14 @@ impl<L: Debug + Copy> Abs for Complex<L> where L: Pows + ValueFrom<isize> + Add<
 	/// Calculated as `(self.real() ** 2 + self.imaginary() ** 2) ** 0.5`
 	fn absolute(&self) -> Self {
 		Complex::from_real(self.real.power(2.value_as().unwrap()) + self.imaginary.power(2.value_as().unwrap()).root_n(2.value_as().unwrap()))
+	}
+}
+
+impl<L: Debug + Copy> Epsilon for Complex<L> where L: Epsilon {
+	fn epsilon(&self) -> Self {
+		Complex {
+			real: self.real.epsilon(),
+			imaginary: self.imaginary.epsilon()
+		}
 	}
 }
