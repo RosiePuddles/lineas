@@ -151,3 +151,67 @@ mod mult {
 		}
 	}
 }
+
+#[cfg(test)]
+mod indexing {
+	use super::*;
+	
+	#[cfg(test)]
+	mod correct {
+		use super::*;
+		
+		#[test]
+		fn value() {
+			let lhs = Matrix::new([[-3, 4], [12, 17], [-15, 0]]);
+			let rhs = 12;
+			assert_eq!(lhs[(1, 0)], rhs)
+		}
+	}
+	
+	#[cfg(test)]
+	mod incorrect {
+		use super::*;
+		
+		#[test]
+		#[should_panic(expected = "Matrix has size 2×3. Row 4 is outside range 0 to 2")]
+		fn outside_row() {
+			let lhs = Matrix::new([[-3, 4, 0], [2, 1, -2]]);
+			lhs[(4, 0)];
+		}
+		
+		#[test]
+		#[should_panic(expected = "Matrix has size 2×3. Column 3 is outside range 0 to 3")]
+		fn outside_col() {
+			let lhs = Matrix::new([[-3, 4, 0], [2, 1, -2]]);
+			lhs[(1, 3)];
+		}
+	}
+}
+
+#[cfg(test)]
+mod additive {
+	use super::*;
+	
+	#[test]
+	fn sum() {
+		let lhs = Matrix::new([[-3, 12], [9, 0]]);
+		let rhs = 18;
+		assert_eq!(lhs.sum(), rhs)
+	}
+	
+	#[test]
+	fn trace() {
+		let lhs = Matrix::new([[0, 12, 5], [3, -2, 4], [10, 15, 3]]);
+		let mut rhs = lhs.clone();
+		rhs[(1, 0)] = -5;
+		assert_eq!(lhs.trace(), rhs.trace())
+	}
+	
+	#[test]
+	fn diag() {
+		let lhs = Matrix::new([[0, 12, 5], [3, -2, 4], [10, 15, 3]]);
+		let mut rhs = lhs.clone();
+		rhs[(1, 0)] = -5;
+		assert_eq!(lhs.diag(), rhs.diag())
+	}
+}
