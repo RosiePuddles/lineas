@@ -1,4 +1,4 @@
-use lineas::{vector, imag};
+use lineas::{vector, comp};
 
 #[cfg(test)]
 mod dot {
@@ -25,9 +25,9 @@ mod dot {
 	
 	#[test]
 	fn complex() {
-		let lhs1 = vector!([imag!(2), imag!(, 4), imag!(1)]);
-		let lhs2 = vector!([imag!(-2, 3), imag!(3), imag!(, -2)]);
-		assert_eq!(lhs1.cdot(lhs2), imag!(-4, 8))
+		let lhs1 = vector!([comp!(2), comp!(, 4), comp!(1)]);
+		let lhs2 = vector!([comp!(-2, 3), comp!(3), comp!(, -2)]);
+		assert_eq!(lhs1.cdot(lhs2), comp!(-4, 8))
 	}
 }
 

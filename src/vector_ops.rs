@@ -43,15 +43,15 @@ macro_rules! cvector {
 /// - Comma followed by one value => [`Complex::from_imaginary`]
 /// - Two values seperated by a comma => [`Complex::from_complex`]
 /// ```
-/// use lineas::{Complex, imag};
-/// assert_eq!(imag!(1), Complex::from_real(1));
-/// assert_eq!(imag!(,-3), Complex::from_imaginary(-3));
-/// assert_eq!(imag!(10, 4), Complex::from_complex(10, 4));
+/// use lineas::{Complex, comp};
+/// assert_eq!(comp!(1), Complex::from_real(1));
+/// assert_eq!(comp!(,-3), Complex::from_imaginary(-3));
+/// assert_eq!(comp!(10, 4), Complex::from_complex(10, 4));
 /// ```
 ///
 /// To use this macro you do not need to have `use lineas::Complex` in your file
 #[macro_export]
-macro_rules! imag {
+macro_rules! comp {
     ($x:expr) => { $crate::Complex::from_real($x) };
 	(,$x:expr) => { $crate::Complex::from_imaginary($x) };
 	($x:expr,$y:expr) => { $crate::Complex::from_complex($x, $y) };

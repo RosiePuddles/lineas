@@ -1,4 +1,4 @@
-use lineas::{vector, cvector, imag};
+use lineas::{vector, cvector, comp};
 
 #[cfg(test)]
 mod main {
@@ -11,17 +11,17 @@ mod main {
 		
 		#[test]
 		fn real() {
-			assert_eq!(imag!(1), Complex::from_real(1))
+			assert_eq!(comp!(1), Complex::from_real(1))
 		}
 		
 		#[test]
 		fn imag_only() {
-			assert_eq!(imag!(,-3), Complex::from_imaginary(-3));
+			assert_eq!(comp!(,-3), Complex::from_imaginary(-3));
 		}
 		
 		#[test]
 		fn full_complex() {
-			assert_eq!(imag!(9. ,-2.3), Complex::from_complex(9., -2.3));
+			assert_eq!(comp!(9. ,-2.3), Complex::from_complex(9., -2.3));
 		}
 	}
 	
@@ -61,6 +61,6 @@ mod without_imports {
 	
 	#[test]
 	fn imag() {
-		let _a = imag!(4);
+		let _a = comp!(4);
 	}
 }

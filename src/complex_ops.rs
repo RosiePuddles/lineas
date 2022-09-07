@@ -2,12 +2,13 @@ use std::fmt::{Debug, Display, Error, Formatter};
 use std::ops::{Add, Sub, AddAssign, SubAssign, Mul, MulAssign, Div, DivAssign, Neg};
 use conv::{ConvUtil, ValueFrom};
 use crate::Complex;
+use crate::traits::{Abs, Pows};
 
-impl<L: Copy + Debug> Complex<L> where L: ValueFrom<isize> {
+impl<L: Copy + Debug> Complex<L> {
 	/// Make a new complex value from a real value
 	///
 	/// Generates a complex value with the imaginary part being 0
-	pub fn from_real(r: L) -> Self {
+	pub fn from_real(r: L) -> Self where L: ValueFrom<isize> {
 		Self {
 			real: r,
 			imaginary: 0.value_as().unwrap()
@@ -17,7 +18,7 @@ impl<L: Copy + Debug> Complex<L> where L: ValueFrom<isize> {
 	/// Make a new complex value from an imaginary value
 	///
 	/// Generates a complex value with the real part being 0
-	pub fn from_imaginary(i: L) -> Self {
+	pub fn from_imaginary(i: L) -> Self where L: ValueFrom<isize> {
 		Self {
 			real: 0.value_as().unwrap(),
 			imaginary: i
@@ -50,6 +51,19 @@ impl<L: Copy + Debug> Complex<L> where L: ValueFrom<isize> {
 		Self {
 			real: self.real,
 			imaginary: -self.imaginary
+		}
+	}
+	
+	/// Return the absolute values of the real and imaginary parts of the value
+	/// ```
+	/// # use lineas::{comp, Complex};
+	/// let example: Complex<_> = comp!(-3, 2);
+	/// assert_eq!(example.element_abs(), comp!(example.real(), example.imag()))
+	/// ```
+	pub fn element_abs(&self) -> Self where L: Abs {
+		Complex {
+			real: self.real().absolute(),
+			imaginary: self.imaginary.absolute()
 		}
 	}
 	
@@ -158,6 +172,17 @@ impl<L: Copy + Debug> DivAssign<Complex<L>> for Complex<L> where L: Mul<Output=L
 
 impl<L: Display + Debug + Copy> Display for Complex<L> {
 	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-		write!(f, "{}{:+}i", self.real, self.imaginary)
+		let e = f.precision().unwrap_or(0);
+		let w = f.width().unwrap_or(0);
+		write!(f, "{:w$.e$}{:+w$.e$}i", self.real, self.imaginary)
+	}
+}
+
+impl<L: Debug + Copy> Abs for Complex<L> where L: Pows + ValueFrom<isize> + Add<Output=L> {
+	/// Return the absolute value of a complex value
+	///
+	/// Calculated as `(self.real() ** 2 + self.imaginary() ** 2) ** 0.5`
+	fn absolute(&self) -> Self {
+		Complex::from_real(self.real.power(2.value_as().unwrap()) + self.imaginary.power(2.value_as().unwrap()).root_n(2.value_as().unwrap()))
 	}
 }
