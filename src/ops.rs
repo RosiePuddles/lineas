@@ -59,8 +59,8 @@ impl<const T: usize, const N: usize, const P: usize, L: Copy + Debug + ValueFrom
 	/// as `B * A`.
 	fn mul(self, rhs: Matrix<N, P, L>) -> Self::Output {
 		let mut data = [[0.value_as().unwrap(); P]; T];
-		for i in 0..P {
-			for j in 0..T {
+		for i in 0..T {
+			for j in 0..P {
 				let mut res: L = 0.value_as().unwrap();
 				for k in 0..N {
 					res = res + (self.0[i][k] * rhs.0[k][j]);
