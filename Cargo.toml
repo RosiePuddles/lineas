@@ -8,7 +8,7 @@ categories = ["mathematics"]
 license = "GPL-3.0-only"
 repository = "https://github.com/RosiePuddles/lineas"
 homepage = "https://github.com/RosiePuddles/lineas"
-documentation = "https://docs.rs/crate/lineas"
+documentation = "https://docs.rs/lineas/latest"
 readme = "README.md"
 keywords = ["maths", "linear-algebra", "algebra", "matrix", "vector"]
 
