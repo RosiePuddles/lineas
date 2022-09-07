@@ -22,7 +22,7 @@ macro_rules! vector {
 
 /// # Column vector macro
 ///
-/// This creates a [`ColVector`] instance. Use it like you would `vec!`
+/// This creates a [`crate::prelude::ColVector`] instance. Use it like you would `vec!`
 /// ```
 /// use lineas::{cvector, ColVector};
 /// let lhs = cvector!([1, 2, 3]);

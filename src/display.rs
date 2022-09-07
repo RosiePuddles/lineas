@@ -4,11 +4,11 @@ use conv::{ConvUtil, ValueFrom};
 use itertools::Itertools;
 
 impl<const T: usize, const N: usize, L: Copy + Debug + Display> Display for Matrix<T, N, L> {
-	/// Display [`Matrix`], [`Vector`], or [`ColVector`]
+	/// Display [`Matrix`], [`Vector`][`crate::prelude::Vector`], or [`ColVector`][`crate::prelude::ColVector`]
 	///
 	/// You can specify precision, width, and the presence of a sign before the elements
 	///
-	/// For [`ColVectors`] (or more specifically any `Matrix<T, 1, L>`) you can also specify the
+	/// For [`ColVector`][`crate::prelude::ColVector`] (or more specifically any `Matrix<T, 1, L>`) you can also specify the
 	/// alternative display with the `#` flag. This will return the vector all on one line with a
 	/// superscript T at the end to indicate a transposition.
 	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
