@@ -39,6 +39,24 @@ mod add_sub {
 	}
 	
 	#[test]
+	fn matrix_add_assign_matrix() {
+		let mut lhs = Matrix::new([[1, 2, 3],[4, 5, 6], [7, 8, 9]]);
+		let rhs = Matrix::new([[9, 8, 7],[6, 5, 4], [3, 2, 1]]);
+		lhs += rhs;
+		let res = Matrix::new([[10, 10, 10],[10, 10, 10], [10, 10, 10]]);
+		assert_eq!(lhs, res)
+	}
+	
+	#[test]
+	fn matrix_sub_assign_matrix() {
+		let mut lhs = Matrix::new([[10, 10, 10],[10, 10, 10], [10, 10, 10]]);
+		let rhs = Matrix::new([[9, 8, 7],[6, 5, 4], [3, 2, 1]]);
+		lhs -= rhs;
+		let res = Matrix::new([[1, 2, 3],[4, 5, 6], [7, 8, 9]]);
+		assert_eq!(lhs, res)
+	}
+	
+	#[test]
 	fn matrix_add_neg_matrix() {
 		let lhs = Matrix::new([[10, 10, 10],[10, 10, 10], [10, 10, 10]]);
 		let rhs = Matrix::new([[9, 8, 7],[6, 5, 4], [3, 2, 1]]);
@@ -166,6 +184,14 @@ mod indexing {
 			let rhs = 12;
 			assert_eq!(lhs[(1, 0)], rhs)
 		}
+		
+		#[test]
+		fn mutable() {
+			let mut lhs = Matrix::<2, 2, _>::empty();
+			lhs[(0, 0)] = 1;
+			let res = Matrix::new([[1, 0], [0, 0]]);
+			assert_eq!(lhs, res)
+		}
 	}
 	
 	#[cfg(test)]
@@ -210,8 +236,7 @@ mod additive {
 	#[test]
 	fn diag() {
 		let lhs = Matrix::new([[0, 12, 5], [3, -2, 4], [10, 15, 3]]);
-		let mut rhs = lhs.clone();
-		rhs[(1, 0)] = -5;
+		let rhs = Matrix::new([[0, -2, 3], [-9, -2, 0], [15, -4, 3]]);
 		assert_eq!(lhs.diag(), rhs.diag())
 	}
 }

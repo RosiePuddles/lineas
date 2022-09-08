@@ -194,7 +194,10 @@ impl<L: Debug + Copy> Abs for Complex<L> where L: Pows + ValueFrom<isize> + Add<
 	///
 	/// Calculated as `(self.real() ** 2 + self.imaginary() ** 2) ** 0.5`
 	fn absolute(&self) -> Self {
-		Complex::from_real(self.real.power(2.value_as().unwrap()) + self.imaginary.power(2.value_as().unwrap()).root_n(2.value_as().unwrap()))
+		Complex::from_real((
+			self.real.power(2.value_as().unwrap()) + self.imaginary.power(2.value_as().unwrap())
+		).root_n(2.value_as().unwrap())
+		)
 	}
 }
 

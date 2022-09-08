@@ -40,6 +40,7 @@ mod plu_decompose {
 		assert_eq!(p * l * u, a)
 	}
 	
+	// TODO: Find a matrix with no PLU decomposition
 	// #[test]
 	// fn incorrect() {
 	// 	let a = Matrix::new([[0, 1], [1, 1]]);

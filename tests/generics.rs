@@ -15,14 +15,14 @@ fn empty() {
 }
 
 #[test]
-fn rotatef32() {
+fn rotate2f32() {
 	let lhs = Matrix::rotation2(Angle::Degrees(180.));
 	let rhs = Matrix::new([[-1f32, 0.], [0., -1.]]);
 	assert_eq!(lhs.epsilon_filter(), rhs)
 }
 
 #[test]
-fn rotatef64() {
+fn rotate2f64() {
 	let lhs = Matrix::rotation2(Angle::Degrees(180.)).epsilon_filter();
 	let rhs = Matrix::new([[-1f64, 0.], [0., -1.]]);
 	assert_eq!(lhs.epsilon_filter(), rhs)
