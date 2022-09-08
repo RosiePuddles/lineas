@@ -4,7 +4,7 @@ use std::fmt::Debug;
 use std::ops::{Add, Sub, Index, AddAssign, IndexMut, SubAssign, Mul, MulAssign, Neg};
 use conv::{ConvUtil, ValueFrom};
 
-impl<const T: usize, const N: usize, L: Copy + Debug> Add for Matrix<T, N, L> where L: Add<Output=L> {
+impl<const T: usize, const N: usize, L: Copy + Debug> Add<Matrix<T, N, L>> for Matrix<T, N, L> where L: Add<Output=L> {
 	type Output = Self;
 	
 	fn add(self, rhs: Self) -> Self::Output {
@@ -18,7 +18,7 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Add for Matrix<T, N, L> wh
 	}
 }
 
-impl<const T: usize, const N: usize, L: Copy + Debug> AddAssign for Matrix<T, N, L> where L: Add<Output=L> {
+impl<const T: usize, const N: usize, L: Copy + Debug> AddAssign<Matrix<T, N, L>> for Matrix<T, N, L> where L: Add<Output=L> {
 	fn add_assign(&mut self, rhs: Self) {
 		for i in 0..N {
 			for n in 0..T {
@@ -28,7 +28,7 @@ impl<const T: usize, const N: usize, L: Copy + Debug> AddAssign for Matrix<T, N,
 	}
 }
 
-impl<const T: usize, const N: usize, L: Copy + Debug> Sub for Matrix<T, N, L> where L: Sub<Output=L> {
+impl<const T: usize, const N: usize, L: Copy + Debug> Sub<Matrix<T, N, L>> for Matrix<T, N, L> where L: Sub<Output=L> {
 	type Output = Self;
 	
 	fn sub(self, rhs: Self) -> Self::Output {
@@ -42,7 +42,7 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Sub for Matrix<T, N, L> wh
 	}
 }
 
-impl<const T: usize, const N: usize, L: Copy + Debug> SubAssign for Matrix<T, N, L> where L: Sub<Output=L> {
+impl<const T: usize, const N: usize, L: Copy + Debug> SubAssign<Matrix<T, N, L>> for Matrix<T, N, L> where L: Sub<Output=L> {
 	fn sub_assign(&mut self, rhs: Self) {
 		for i in 0..N {
 			for n in 0..T {

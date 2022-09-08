@@ -7,6 +7,7 @@ use itertools::Itertools;
 use crate::Complex;
 use crate::traits::{Abs, Epsilon};
 
+/// # All matrices
 impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 	/// Generate a new matrix from a given array `[[L; N]; T]`
 	pub fn new(data: [[L; N]; T]) -> Self {
@@ -119,15 +120,6 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 		}
 	}
 	
-	/// Returns the trace of a matrix
-	pub fn trace(&self) -> L where L: ValueFrom<isize> + Add<Output=L> {
-		let mut out = 0.value_as().unwrap();
-		for i in 0..N {
-			out  = out + self.0[i][i]
-		}
-		out
-	}
-	
 	/// Filters out small values using the [`Epsilon`][crate::traits::Epsilon] trait
 	///
 	/// This is implemented by default for `f32`, `f64`, `Complex<f32>`, and `Complex<f64>`
@@ -150,6 +142,7 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 	}
 }
 
+/// # Complex valued matrices
 impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, Complex<L>> {
 	/// Return the matrix with the elementwise complex absolute values.
 	///
@@ -172,6 +165,7 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, Complex<L>> {
 	}
 }
 
+/// # Square matrices
 impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> {
 	/// Returns the determinant of a square matrix
 	///
@@ -195,6 +189,15 @@ impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> {
 				temp = temp * self[(r, **c)];
 			}
 			out = out + perm_sign(p).value_as::<L>().unwrap() * temp;
+		}
+		out
+	}
+	
+	/// Returns the trace of a matrix
+	pub fn trace(&self) -> L where L: ValueFrom<isize> + Add<Output=L> {
+		let mut out = 0.value_as().unwrap();
+		for i in 0..T {
+			out  = out + self.0[i][i]
 		}
 		out
 	}
