@@ -88,6 +88,89 @@ mod add {
 }
 
 #[cfg(test)]
+mod sub {
+	use super::*;
+	
+	#[cfg(test)]
+	mod polynomials {
+		use super::*;
+		
+		#[test]
+		fn sub() {
+			let lhs1 = Polynomial::new(vec![1, 2, 3]);
+			let lhs2 = Polynomial::new(vec![-5, 3, 10]);
+			let rhs = Polynomial::new(vec![6, -1, -7]);
+			assert_eq!(lhs1 - lhs2, rhs)
+		}
+		
+		#[test]
+		fn sub_zero_last_2() {
+			let lhs1 = Polynomial::new(vec![2, 0, 5, -6]);
+			let lhs2 = Polynomial::new(vec![2, 0, 1, 3]);
+			let rhs = Polynomial::new(vec![4, -9]);
+			assert_eq!(lhs1 - lhs2, rhs)
+		}
+		
+		#[test]
+		fn sub_assign() {
+			let mut lhs1 = Polynomial::new(vec![1, 2, 3]);
+			let lhs2 = Polynomial::new(vec![-5, 3, 10]);
+			let rhs = Polynomial::new(vec![6, -1, -7]);
+			lhs1 -= lhs2;
+			assert_eq!(lhs1, rhs)
+		}
+		
+		#[test]
+		fn sub_assign_zero_last_2() {
+			let mut lhs1 = Polynomial::new(vec![2, 0, 5, -6]);
+			let lhs2 = Polynomial::new(vec![2, 0, 1, 3]);
+			let rhs = Polynomial::new(vec![4, -9]);
+			lhs1 -= lhs2;
+			assert_eq!(lhs1, rhs)
+		}
+	}
+	
+	#[cfg(test)]
+	mod literals {
+		use super::*;
+		
+		#[test]
+		fn sub() {
+			let lhs1 = Polynomial::new(vec![1, 2, 3]);
+			let lhs2 = 10;
+			let rhs = Polynomial::new(vec![1, 2, -7]);
+			assert_eq!(lhs1 - lhs2, rhs)
+		}
+		
+		#[test]
+		fn sub_zero_last_2() {
+			let lhs1 = Polynomial::new(vec![0, 0, 5, -6]);
+			let lhs2 = 4;
+			let rhs = Polynomial::new(vec![5, -10]);
+			assert_eq!(lhs1 - lhs2, rhs)
+		}
+		
+		#[test]
+		fn sub_assign() {
+			let mut lhs1 = Polynomial::new(vec![1, 2, 3]);
+			let lhs2 = 10;
+			let rhs = Polynomial::new(vec![1, 2, -7]);
+			lhs1 -= lhs2;
+			assert_eq!(lhs1, rhs)
+		}
+		
+		#[test]
+		fn sub_assign_zero_last_2() {
+			let mut lhs1 = Polynomial::new(vec![0, 0, 5, -6]);
+			let lhs2 = 4;
+			let rhs = Polynomial::new(vec![5, -10]);
+			lhs1 -= lhs2;
+			assert_eq!(lhs1, rhs)
+		}
+	}
+}
+
+#[cfg(test)]
 mod mult {
 	use super::*;
 	
@@ -134,6 +217,13 @@ mod mult {
 			assert_eq!(lhs1, rhs)
 		}
 	}
+}
+
+#[test]
+fn neg() {
+	let lhs = Polynomial::new(vec![2, 9, 4, -5]);
+	let rhs = Polynomial::new(vec![-2, -9, -4, 5]);
+	assert_eq!(-lhs, rhs)
 }
 
 #[cfg(feature = "plotting")]

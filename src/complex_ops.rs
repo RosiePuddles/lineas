@@ -170,6 +170,17 @@ impl<L: Copy + Debug> DivAssign<Complex<L>> for Complex<L> where L: Mul<Output=L
 	}
 }
 
+impl<L: Copy + Debug> Neg for Complex<L> where L: Neg<Output=L> {
+	type Output = Self;
+	
+	fn neg(self) -> Self::Output {
+		Complex {
+			real: -self.real,
+			imaginary: -self.imaginary
+		}
+	}
+}
+
 impl<L: Display + Debug + Copy> Display for Complex<L> {
 	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
 		let e = f.precision().unwrap_or(0);

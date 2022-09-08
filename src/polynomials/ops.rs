@@ -164,7 +164,7 @@ impl<L: Copy + Debug, Q> Sub<Q> for Polynomial<L> where Q: ValueInto<Polynomial<
 			(rhs, self)
 		};
 		let mut out = Vec::new();
-		let mut iter = rhs.0.iter().zip(lhs.0.iter());
+		let mut iter = lhs.0.iter().zip(rhs.0.iter());
 		while let Some((l, r)) = iter.next() {
 			if *l - *r == 0.value_as::<L>().unwrap() && out.len() == 0 {
 				continue
@@ -191,7 +191,7 @@ impl<L: Copy + Debug, Q> SubAssign<Q> for Polynomial<L> where Q: ValueInto<Polyn
 			(rhs, self.clone())
 		};
 		let mut out = Vec::new();
-		let mut iter = rhs.0.iter().zip(lhs.0.iter());
+		let mut iter = lhs.0.iter().zip(rhs.0.iter());
 		while let Some((l, r)) = iter.next() {
 			if *l - *r == 0.value_as::<L>().unwrap() && out.len() == 0 {
 				continue

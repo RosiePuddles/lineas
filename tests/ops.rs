@@ -136,17 +136,17 @@ mod mult {
 		
 		#[test]
 		fn vector_matrix() {
-			let lhs1 = vector!([1, 2, 3, 4]);
+			let lhs1 = vector![1, 2, 3, 4];
 			let lhs2 = Matrix::new([[9, 17], [3, 0], [42, 69], [1, 7]]);
-			let rhs = vector!([145, 252]);
+			let rhs = vector![145, 252];
 			assert_eq!(lhs1 * lhs2, rhs)
 		}
 		
 		#[test]
 		fn matrix_cvector() {
 			let lhs1 = Matrix::new([[-5, 4, 0], [2, 0, 15]]);
-			let lhs2 = cvector!([-2, 3, 5]);
-			let rhs = cvector!([22, 71]);
+			let lhs2 = cvector![-2, 3, 5];
+			let rhs = cvector![22, 71];
 			assert_eq!(lhs1 * lhs2, rhs)
 		}
 	}
@@ -223,7 +223,7 @@ mod cofactors {
 	#[test]
 	fn cofactor() {
 		let lhs = Matrix::new([[-67, 126, 15], [22, 22, -83], [61, -13, -119]]);
-		for (p, r) in [((0, 0), -3697), ((0, 1), 2445)] {
+		for (p, r) in [((0, 0), -3697), ((0, 1), -2445)] {
 			assert_eq!(lhs.cofactor(p), r)
 		}
 	}
@@ -233,5 +233,12 @@ mod cofactors {
 		let lhs = Matrix::new([[-3, 2, -5], [-1, 0, -2], [3, -4, 1]]);
 		let rhs = Matrix::new([[-8, 18, -4], [-5, 12, -1], [4, -6, 2]]);
 		assert_eq!(lhs.adjoint(), rhs)
+	}
+	
+	#[test]
+	fn cofactor_matrix() {
+		let lhs = Matrix::new([[-3, 2, -5], [-1, 0, -2], [3, -4, 1]]);
+		let rhs = Matrix::new([[-8, -5, 4], [18, 12, -6], [-4, -1, 2]]);
+		assert_eq!(lhs.cofactor_matrix(), rhs)
 	}
 }

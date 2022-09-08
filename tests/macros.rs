@@ -31,14 +31,14 @@ mod main {
 		
 		#[test]
 		fn vector() {
-			let lhs = vector!([1, 2, 3]);
+			let lhs = vector![1, 2, 3];
 			let rhs = Vector::new([[1, 2, 3]]);
 			assert_eq!(lhs, rhs)
 		}
 		
 		#[test]
 		fn cvector() {
-			let lhs = cvector!([1, 2, 3]);
+			let lhs = cvector![1, 2, 3];
 			let rhs = ColVector::new([[1], [2], [3]]);
 			assert_eq!(lhs, rhs)
 		}
@@ -51,12 +51,12 @@ mod without_imports {
 	
 	#[test]
 	fn vector() {
-		let _a = vector!([1, 2, 3]);
+		let _a = vector![1, 2, 3];
 	}
 	
 	#[test]
 	fn cvector() {
-		let _a = cvector!([1, 2, 3]);
+		let _a = cvector![1, 2, 3];
 	}
 	
 	#[test]

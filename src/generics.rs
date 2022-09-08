@@ -33,7 +33,7 @@ impl<L: Copy + Debug> Matrix<2, 2, L> where L: Rotation {
 	/// # use lineas::prelude::Matrix;
 	/// assert_eq!(Matrix::new([[1, 0], [0, 1]]), Matrix::<2, 2, _>::identity())
 	/// ```
-	pub fn rotation<Q: Rotation>(angle: Angle<Q>) -> Self {
+	pub fn rotation2<Q: Rotation>(angle: Angle<Q>) -> Self {
 		let angle = angle.angle();
 		Matrix::new([[L::back(angle.cos()), L::back(-angle.sin())], [L::back(angle.sin()), L::back(angle.cos())]])
 	}

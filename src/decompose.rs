@@ -109,8 +109,8 @@ impl<const T: usize, L: Copy + Debug> PLUDecompose for  Matrix<T, T, L> where L:
 pub trait Diagonalise {
 	/// Diagonalisation a matrix
 	///
-	/// This means that for a matrix `A`, we have two matrices `P` and `D` such that `PDP'==A` where
-	/// `P'` is the inverse of `P`.
+	/// This means that for a matrix `A`, we have two matrices `P` and `D` such that `PDP⁻¹ = A` where
+	/// `P⁻¹` is the inverse of `P`.
 	///
 	/// The process is linked to finding eigenvalues and so can be inaccurate due to the nature of
 	/// eigenvalue calculation.

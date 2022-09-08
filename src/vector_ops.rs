@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 use std::ops::{Add, Mul, Neg, Sub};
 use conv::{ConvUtil, ValueFrom};
-use crate::{Complex, Norm, Vector};
+use crate::{Complex, Matrix, Norm, Vector};
 use crate::traits::{Abs, Pows};
 
 /// # Vector macro
@@ -9,7 +9,7 @@ use crate::traits::{Abs, Pows};
 /// This creates a [`Vector`] instance. Use it like you would `vec!`
 /// ```
 /// use lineas::{vector, Vector};
-/// let lhs = vector!([1, 2, 3]);
+/// let lhs = vector![1, 2, 3];
 /// let rhs = Vector::new([[1, 2, 3]]);
 /// assert_eq!(lhs, rhs)
 /// ```
@@ -17,7 +17,7 @@ use crate::traits::{Abs, Pows};
 /// To use this macro you do not need to have `use lineas::Vector` in your file
 #[macro_export]
 macro_rules! vector {
-    ([$($x:expr),+ $(,)?]) => { $crate::Vector::new([[$($x),+]]) };
+    [$($x:expr),+ $(,)?] => { $crate::Vector::new([[$($x),+]]) };
 }
 
 /// # Column vector macro
@@ -25,7 +25,7 @@ macro_rules! vector {
 /// This creates a [`crate::prelude::ColVector`] instance. Use it like you would `vec!`
 /// ```
 /// use lineas::{cvector, ColVector};
-/// let lhs = cvector!([1, 2, 3]);
+/// let lhs = cvector![1, 2, 3];
 /// let rhs = ColVector::new([[1], [2], [3]]);
 /// assert_eq!(lhs, rhs)
 /// ```
@@ -33,7 +33,7 @@ macro_rules! vector {
 /// To use this macro you do not need to have `use lineas::ColVector` in your file
 #[macro_export]
 macro_rules! cvector {
-    ([$($x:expr),+ $(,)?]) => { $crate::ColVector::new([$(([$x])),+]) };
+    [$($x:expr),+ $(,)?] => { $crate::ColVector::new([$(([$x])),+]) };
 }
 
 /// # Complex value macro
@@ -63,8 +63,8 @@ impl<const T: usize, L: Copy + Debug> Vector<T, L> {
 	/// This is equivalent to A . Bᵀ where Bᵀ is B transposed. This function is preferable to the
 	/// multiplication based approach because it returns a single value, whereas multiplying vectors
 	/// would return a `Matrix<1, 1, L>`
-	pub fn dot(&self, rhs: Self) -> L where L: Add<Output=L> + Mul<Output=L> + ValueFrom<isize> {
-		self.0[0].iter().zip(rhs.0[0].iter()).fold(0.value_as().unwrap(), |acc, (l, r)| acc + *l * *r)
+	pub fn dot<Q: Copy + Debug>(&self, rhs: Vector<T, Q>) -> L where L: Add<Output=L> + Mul<Output=L> + ValueFrom<isize> + ValueFrom<Q> {
+		self.0[0].iter().zip(rhs.dtype::<L>().0[0].iter()).fold(0.value_as().unwrap(), |acc, (l, r)| acc + *l * *r)
 	}
 	
 	/// Calculate the magnitude of a vector.
@@ -87,6 +87,14 @@ impl<const T: usize, L: Copy + Debug> Vector<T, L> {
 	/// ```
 	pub fn norm(&self, norm: Norm<L>) -> L where L: ValueFrom<isize> + Copy + Add<Output=L> + Pows + Abs {
 		norm.call(self.0[0].clone().to_vec())
+	}
+}
+
+impl<L: Copy + Debug, > Vector<3, L> {
+	/// Cross product of two vectors in three dimensions
+	pub fn cross<Q: Copy + Debug>(&self, rhs: Vector<3, Q>) -> Vector<3, L> where L: ValueFrom<isize> + ValueFrom<Q> + Add<Output=L> + Mul<Output=L> + Sub<Output=L> + Neg<Output=L> {
+		let s = Matrix::new([[0.value_as().unwrap(); 3], self.0[0], rhs.dtype().0[0]]);
+		vector![s.cofactor((0, 0)), s.cofactor((0, 1)), s.cofactor((0, 2))]
 	}
 }
 

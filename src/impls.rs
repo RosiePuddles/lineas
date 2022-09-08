@@ -247,6 +247,7 @@ impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> {
 	///
 	/// Calculated using Leibniz's determinant formula based on set permutations. Used instead of a
 	/// recursive formula because recursion is slow
+	#[doc(alias = "det")]
 	pub fn determinant(&self) -> L where L: Add<Output=L> + Sub<Output=L> + Mul<Output=L> + ValueFrom<isize> {
 		match T {
 			1 => self.0[0][0],
@@ -314,7 +315,7 @@ impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> {
 		}
 	}
 	
-	pub fn cofactor(&self, position: (usize, usize)) -> L where L: ValueFrom<isize> + Add<Output=L> + Mul<Output=L> + Sub<Output=L> {
+	pub fn cofactor(&self, position: (usize, usize)) -> L where L: ValueFrom<isize> + Add<Output=L> + Mul<Output=L> + Sub<Output=L> + Neg<Output=L> {
 		let mut out = [[0.value_as().unwrap(); T]; T];
 		out[0][0] = 1.value_as().unwrap();
 		let mut row_iter = (0..T).collect::<Vec<usize>>();
@@ -326,25 +327,31 @@ impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> {
 				out[i + 1][n + 1] = self.0[*i_actual][*n_actual]
 			}
 		}
-		Matrix(out).determinant()
+		if (position.0 + position.1) % 2 == 0 {
+			Matrix(out).determinant()
+		} else {
+			-Matrix(out).determinant()
+		}
 	}
 	
 	pub fn cofactor_matrix(&self) -> Self where L: ValueFrom<isize> + Add<Output=L> + Mul<Output=L> + Sub<Output=L> + Neg<Output=L> {
 		let mut out = [[0.value_as().unwrap(); T]; T];
 		for i in 0..T {
 			for n in 0..T {
-				out[i][n] = if (n + i) % 2 == 0 {
-					self.cofactor((i, n))
-				} else {
-					-self.cofactor((i, n))
-				}
+				out[i][n] = self.cofactor((i, n))
 			}
 		}
 		Matrix(out)
 	}
 	
 	pub fn adjoint(&self) -> Self where L: ValueFrom<isize> + Add<Output=L> + Mul<Output=L> + Sub<Output=L> + Neg<Output=L> {
-		self.cofactor_matrix().transpose()
+		let mut out = [[0.value_as().unwrap(); T]; T];
+		for i in 0..T {
+			for n in 0..T {
+				out[n][i] = self.cofactor((i, n))
+			}
+		}
+		Matrix(out)
 	}
 }
 
