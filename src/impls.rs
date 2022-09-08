@@ -1,7 +1,7 @@
 /// Implementations for the matrix struct
 use crate::prelude::{Matrix, Vector};
 use std::fmt::Debug;
-use std::ops::{Add, Mul, Neg};
+use std::ops::{Add, Div, Mul, Neg};
 use conv::{ConvUtil, ValueFrom, ValueInto};
 use itertools::Itertools;
 use crate::Complex;
@@ -223,6 +223,69 @@ impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> {
 				let temp = self.0[i][j];
 				self.0[i][j] = self.0[j][i];
 				self.0[j][i] = temp
+			}
+		}
+	}
+}
+
+/// # Elementwise operations
+impl<const T: usize, const N: usize, L: Copy + Debug, Q: Copy + Debug + ValueFrom<L>> Matrix<T, N, L> {
+	/// Elementwise multiplication
+	///
+	/// Returns the result of elementwise multiplication
+	///
+	/// For an assigning with a mutable matrix see [`Matrix::elem_mult_assign`]
+	pub fn elem_mult(&self, rhs: Matrix<T, N, Q>) -> Self where Q: Mul<Output=Self> {
+		let rhs = rhs.dtype::<L>().0;
+		let mut out = self.0.clone();
+		for i in 0..T {
+			for n in 0..N {
+				out[i][n] = out[i][n] * rhs[i][n]
+			}
+		}
+		Matrix(out)
+	}
+	
+	/// Elementwise multiplication
+	///
+	/// Assigns the result of elementwise multiplication to `self`
+	///
+	/// For a non-assigning version see [`Matrix::elem_mult`]
+	pub fn elem_mult_assign(&mut self, rhs: Matrix<T, N, Q>) where Q: Mul<Output=Self> {
+		for i in 0..T {
+			let rhs = rhs.dtype::<L>().0;
+			for n in 0..N {
+				self.0[i][n] = self.0[i][n] * rhs[i][n]
+			}
+		}
+	}
+	
+	/// Elementwise division
+	///
+	/// Returns the result of elementwise division
+	///
+	/// For an assigning with a mutable matrix see [`Matrix::elem_div_assign`]
+	pub fn elem_div(&self, rhs: Matrix<T, N, Q>) -> Self where Q: Div<Output=Self> {
+		let rhs = rhs.dtype::<L>().0;
+		let mut out = self.0.clone();
+		for i in 0..T {
+			for n in 0..N {
+				out[i][n] = out[i][n] / rhs[i][n]
+			}
+		}
+		Matrix(out)
+	}
+	
+	/// Elementwise division
+	///
+	/// Assigns the result of elementwise division to `self`
+	///
+	/// For a non-assigning version see [`Matrix::elem_div`]
+	pub fn elem_div_assign(&mut self, rhs: Matrix<T, N, Q>) where Q: Div<Output=Self> {
+		for i in 0..T {
+			let rhs = rhs.dtype::<L>().0;
+			for n in 0..N {
+				self.0[i][n] = self.0[i][n] / rhs[i][n]
 			}
 		}
 	}
