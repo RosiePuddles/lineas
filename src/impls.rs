@@ -4,7 +4,7 @@ use std::fmt::Debug;
 use std::ops::{Add, Div, Mul, Neg};
 use conv::{ConvUtil, ValueFrom, ValueInto};
 use itertools::Itertools;
-use crate::Complex;
+use crate::{Complex, Norm, Pows};
 use crate::traits::{Abs, Epsilon};
 
 /// # All matrices
@@ -37,6 +37,82 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 				|acc2, t| acc2 + *t
 			)
 		)
+	}
+	
+	/// Return the maximum value in the matrix
+	///
+	/// This will panic if the matrix has no values in it (0×0 matrix)
+	pub fn max(&self) -> L where L: PartialOrd {
+		let mut out = self.0[0][0];
+		for i in 0..T {
+			for n in 0..N {
+				out = if self.0[i][n] > out { self.0[i][n] } else { out }
+			}
+		}
+		out
+	}
+	
+	/// Return the minimum value in the matrix
+	///
+	/// This will panic if the matrix has no values in it (0×0 matrix)
+	pub fn min(&self) -> L where L: PartialOrd {
+		let mut out = self.0[0][0];
+		for i in 0..T {
+			for n in 0..N {
+				out = if self.0[i][n] < out { self.0[i][n] } else { out }
+			}
+		}
+		out
+	}
+	
+	/// Return the minimum and maximum value in the matrix
+	///
+	/// This is equivalent to <code>([self.min()][Matrix::min], [self.max()][Matrix::max])</code>
+	///
+	/// This will panic if the matrix has no values in it (0×0 matrix)
+	pub fn min_max(&self) -> (L, L) where L: PartialOrd {
+		(self.min(), self.max())
+	}
+	
+	/// Return the row with maximum norm value
+	///
+	/// This will panic if the matrix has no values in it (0×0 matrix)
+	pub fn max_row(&self, norm: Norm<L>) -> Vector<N, L> where L: PartialOrd + ValueFrom<isize> + Add<Output=L> + Abs + Pows {
+		let mut out = Vector::new([self.0[0]]);
+		let mut out_norm = out.norm(norm);
+		for i in 1..T {
+			let c_norm = Vector::new([self.0[i]]).norm(norm);
+			if out_norm > c_norm {
+				out_norm = c_norm;
+				out = Vector::new([self.0[i]])
+			}
+		}
+		out
+	}
+	
+	/// Return the row with minimum norm value
+	///
+	/// This will panic if the matrix has no values in it (0×0 matrix)
+	pub fn min_row(&self, norm: Norm<L>) -> Vector<N, L> where L: PartialOrd + ValueFrom<isize> + Add<Output=L> + Abs + Pows {
+		let mut out = Vector::new([self.0[0]]);
+		let mut out_norm = out.norm(norm);
+		for i in 1..T {
+			let c_norm = Vector::new([self.0[i]]).norm(norm);
+			if out_norm > c_norm {
+				out_norm = c_norm;
+				out = Vector::new([self.0[i]])
+			}
+		}
+		out
+	}
+	
+	/// Return the rows with minimum and maximum norm value
+	///
+	/// This is equivalent to <code>([self.min_row()][Matrix::min_row], [self.max_row()][Matrix::max_row])</code>
+	///
+	/// This will panic if the matrix has no values in it (0×0 matrix)
+	pub fn min_max_row(&self, norm: Norm<L>) -> (Vector<N, L>, Vector<N, L>) where L: PartialOrd + ValueFrom<isize> + Add<Output=L> + Abs + Pows {
+		(self.min_row(norm), self.max_row(norm))
 	}
 	
 	/// Return the matrix with the elementwise absolute values
@@ -229,13 +305,13 @@ impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> {
 }
 
 /// # Elementwise operations
-impl<const T: usize, const N: usize, L: Copy + Debug, Q: Copy + Debug + ValueFrom<L>> Matrix<T, N, L> {
+impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 	/// Elementwise multiplication
 	///
 	/// Returns the result of elementwise multiplication
 	///
 	/// For an assigning with a mutable matrix see [`Matrix::elem_mult_assign`]
-	pub fn elem_mult(&self, rhs: Matrix<T, N, Q>) -> Self where Q: Mul<Output=Self> {
+	pub fn elem_mult<Q: Copy + Debug>(&self, rhs: Matrix<T, N, Q>) -> Self where Q: Mul<Output=Self>, L: ValueFrom<Q> + ValueFrom<isize> + Mul<Output=L> {
 		let rhs = rhs.dtype::<L>().0;
 		let mut out = self.0.clone();
 		for i in 0..T {
@@ -251,7 +327,7 @@ impl<const T: usize, const N: usize, L: Copy + Debug, Q: Copy + Debug + ValueFro
 	/// Assigns the result of elementwise multiplication to `self`
 	///
 	/// For a non-assigning version see [`Matrix::elem_mult`]
-	pub fn elem_mult_assign(&mut self, rhs: Matrix<T, N, Q>) where Q: Mul<Output=Self> {
+	pub fn elem_mult_assign<Q: Copy + Debug>(&mut self, rhs: Matrix<T, N, Q>) where Q: Mul<Output=Self>, L: ValueFrom<Q> + ValueFrom<isize> + Mul<Output=L> {
 		for i in 0..T {
 			let rhs = rhs.dtype::<L>().0;
 			for n in 0..N {
@@ -265,7 +341,7 @@ impl<const T: usize, const N: usize, L: Copy + Debug, Q: Copy + Debug + ValueFro
 	/// Returns the result of elementwise division
 	///
 	/// For an assigning with a mutable matrix see [`Matrix::elem_div_assign`]
-	pub fn elem_div(&self, rhs: Matrix<T, N, Q>) -> Self where Q: Div<Output=Self> {
+	pub fn elem_div<Q: Copy + Debug>(&self, rhs: Matrix<T, N, Q>) -> Self where Q: Div<Output=Self>, L: ValueFrom<Q> + ValueFrom<isize> + Div<Output=L> {
 		let rhs = rhs.dtype::<L>().0;
 		let mut out = self.0.clone();
 		for i in 0..T {
@@ -281,7 +357,7 @@ impl<const T: usize, const N: usize, L: Copy + Debug, Q: Copy + Debug + ValueFro
 	/// Assigns the result of elementwise division to `self`
 	///
 	/// For a non-assigning version see [`Matrix::elem_div`]
-	pub fn elem_div_assign(&mut self, rhs: Matrix<T, N, Q>) where Q: Div<Output=Self> {
+	pub fn elem_div_assign<Q: Copy + Debug>(&mut self, rhs: Matrix<T, N, Q>) where Q: Div<Output=Self>, L: ValueFrom<Q> + ValueFrom<isize> + Div<Output=L> {
 		for i in 0..T {
 			let rhs = rhs.dtype::<L>().0;
 			for n in 0..N {
