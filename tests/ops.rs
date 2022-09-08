@@ -233,11 +233,27 @@ mod additive {
 		assert_eq!(lhs.trace(), rhs.trace())
 	}
 	
-	#[test]
-	fn diag() {
-		let lhs = Matrix::new([[0, 12, 5], [3, -2, 4], [10, 15, 3]]);
-		let rhs = Matrix::new([[0, -2, 3], [-9, -2, 0], [15, -4, 3]]);
-		assert_eq!(lhs.diag(), rhs.diag())
+	#[cfg(test)]
+	mod determinant {
+		use super::*;
+		
+		#[test]
+		fn det2() {
+			let a = Matrix::new([[-68, -23], [-74, 17]]);
+			assert_eq!(a.determinant(), -2858)
+		}
+		
+		#[test]
+		fn det3() {
+			let a = Matrix::new([[-89, 44, -122], [52, 48, -39], [-26, -102, -112]]);
+			assert_eq!(a.determinant(), 1628210)
+		}
+		
+		#[test]
+		fn det6() {
+			let a = Matrix::new([[-109, 16, -29, -21, -18], [-86, 88, -29, 50, -33], [59, 115, -93, 65, -101], [-43, -36, -72, 34, -69], [66, 71, 93, 103, -45]]);
+			assert_eq!(a.determinant(), -10037210765i64)
+		}
 	}
 }
 
@@ -266,4 +282,11 @@ mod cofactors {
 		let rhs = Matrix::new([[-8, -5, 4], [18, 12, -6], [-4, -1, 2]]);
 		assert_eq!(lhs.cofactor_matrix(), rhs)
 	}
+}
+
+#[test]
+fn diag() {
+	let lhs = Matrix::new([[0, 12, 5], [3, -2, 4], [10, 15, 3]]);
+	let rhs = Matrix::new([[0, -2, 3], [-9, -2, 0], [15, -4, 3]]);
+	assert_eq!(lhs.diag(), rhs.diag())
 }

@@ -39,6 +39,21 @@ impl<L: Copy + Debug> Matrix<2, 2, L> where L: Rotation {
 	}
 }
 
+impl<L: Copy + Debug> Matrix<3, 3, L> where L: Rotation {
+	/// Generate a 2D rotation matrix for a specified angle
+	///
+	/// This will only work for a `Matrix<T, T, L>` matrix
+	/// ```
+	/// # use lineas::prelude::Matrix;
+	/// assert_eq!(Matrix::new([[1, 0], [0, 1]]), Matrix::<2, 2, _>::identity())
+	/// ```
+	pub fn rotation3<Q: Rotation>(angle1: Angle<Q>, angle2: Angle<Q>) -> Self {
+		todo!()
+		// let angle = angle.angle();
+		// Matrix::new([[L::back(angle.cos()), L::back(-angle.sin())], [L::back(angle.sin()), L::back(angle.cos())]])
+	}
+}
+
 impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> where L: ValueFrom<isize> {
 	/// Generate an empty matrix of a specified size
 	/// ```

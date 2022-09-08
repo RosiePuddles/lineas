@@ -116,5 +116,6 @@ pub trait Diagonalise {
 	/// eigenvalue calculation.
 	///
 	/// > We recommend using floats for decomposition
+	// TODO: impl Diagonalise for Matrix
 	fn diagonalise(&self) -> Option<(Self, Self, Self)> where Self: Sized;
 }

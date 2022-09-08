@@ -1,43 +1,7 @@
-use lineas::Matrix;
-
-#[cfg(test)]
-mod det {
-	use super::*;
-	
-	#[test]
-	fn identity3() {
-		let i3: Matrix<3, 3, f32> = Matrix::identity();
-		assert_eq!(i3.determinant(), 1f32)
-	}
-	
-	#[test]
-	fn identity4() {
-		let i4: Matrix<4, 4, f32> = Matrix::identity();
-		assert_eq!(i4.determinant(), 1f32)
-	}
-	
-	#[test]
-	fn random_6() {
-		let a = Matrix::new([[-109, 16, -29, -21, -18], [-86, 88, -29, 50, -33], [59, 115, -93, 65, -101], [-43, -36, -72, 34, -69], [66, 71, 93, 103, -45]]);
-		assert_eq!(a.determinant(), -10037210765i64)
-	}
-	
-	#[test]
-	fn random_2() {
-		let a = Matrix::new([[-68, -23], [-74, 17]]);
-		assert_eq!(a.determinant(), -2858)
-	}
-	
-	#[test]
-	fn random_3() {
-		let a = Matrix::new([[-89, 44, -122], [52, 48, -39], [-26, -102, -112]]);
-		assert_eq!(a.determinant(), 1628210)
-	}
-}
+use lineas::{Matrix, Complex, comp};
 
 #[cfg(test)]
 mod conjugate {
-	use lineas::Complex;
 	use super::*;
 	
 	#[cfg(test)]
@@ -90,5 +54,54 @@ mod conjugate {
 			]);
 			assert_eq!(lhs, lhs.conj().conj())
 		}
+	}
+}
+
+#[test]
+fn comp_abs() {
+	let lhs = Matrix::new([[comp!(, 5), comp!(3, -2)], [comp!(1, -3), comp!(1)]]);
+	let rhs = Matrix::new([[comp!(, 5), comp!(3, 2)], [comp!(1, 3), comp!(1)]]);
+	assert_eq!(lhs.c_abs(), rhs)
+}
+
+#[cfg(test)]
+mod min_max {
+	use super::*;
+	use lineas::{Norm, vector};
+	
+	#[test]
+	fn min() {
+		assert_eq!(Matrix::new([[-95, 18, -22], [20, -40, -9], [30, -68, 87]]).min(), -95)
+	}
+	
+	#[test]
+	fn max() {
+		assert_eq!(Matrix::new([[-88, 90, -17], [-75, 71, -78], [-74, -70, -28]]).max(), 90)
+	}
+	
+	#[test]
+	fn min_max() {
+		assert_eq!(
+			Matrix::new([[-88, 90, -17], [-75, 71, -78], [-74, -70, -28]]).min_max(),
+			(-88, 90)
+		)
+	}
+	
+	#[test]
+	fn min_row_euclidean() {
+		assert_eq!(Matrix::new([[-31, 98, 91], [92, 105, 32], [52, 21, 83]]).min_row(Norm::Euclidean), vector![52, 21, 83])
+	}
+	
+	#[test]
+	fn max_row_euclidean() {
+		assert_eq!(Matrix::new([[-4, 82, 76], [73, -106, -110], [2, 25, 80]]).min_row(Norm::Euclidean), vector![2, 25, 80])
+	}
+	
+	#[test]
+	fn min_max_row_manhattan() {
+		assert_eq!(
+			Matrix::new([[6, -120, 23], [-72, -32, -88], [102, 2, -20]]).min_max_row(Norm::Manhattan),
+			(vector![102, 2, -20], vector![102, 2, -20])
+		)
 	}
 }
