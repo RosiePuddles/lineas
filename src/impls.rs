@@ -1,7 +1,7 @@
 /// Implementations for the matrix struct
 use crate::prelude::{Matrix, Vector};
 use std::fmt::Debug;
-use std::ops::{Add, Div, Mul, Neg};
+use std::ops::{Add, Div, Mul, Neg, Sub};
 use conv::{ConvUtil, ValueFrom, ValueInto};
 use itertools::Itertools;
 use crate::{Complex, Norm, Pows};
@@ -247,26 +247,37 @@ impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> {
 	///
 	/// Calculated using Leibniz's determinant formula based on set permutations. Used instead of a
 	/// recursive formula because recursion is slow
-	pub fn determinant(&self) -> L where L: Add<Output=L> + Mul<Output=L> + ValueFrom<isize> {
-		fn perm_sign(p: Vec<&usize>) -> isize {
-			let mut out = 0;
-			for i in 0..p.len() {
-				for n in i+1..p.len() {
-					if p[i] > p[n] { out += 1 }
+	pub fn determinant(&self) -> L where L: Add<Output=L> + Sub<Output=L> + Mul<Output=L> + ValueFrom<isize> {
+		match T {
+			1 => self.0[0][0],
+			2 => self.0[0][0] * self.0[1][1] - self.0[1][0] * self.0[0][1],
+			3 => {
+				self.0[0][0] * (self.0[1][1] * self.0[2][2] - self.0[2][1] * self.0[1][2])
+				- self.0[0][1] * (self.0[1][0] * self.0[2][2] - self.0[2][0] * self.0[1][2])
+				+ self.0[0][2] * (self.0[1][0] * self.0[2][1] - self.0[2][0] * self.0[1][1])
+			}
+			_ => {
+				fn perm_sign(p: Vec<&usize>) -> isize {
+					let mut out = 0;
+					for i in 0..p.len() {
+						for n in i+1..p.len() {
+							if p[i] > p[n] { out += 1 }
+						}
+					}
+					if out % 2 == 0 { 1 } else { -1 }
 				}
+				let mut out = 0.value_as().unwrap();
+				let permutation = (0..T).collect::<Vec<usize>>();
+				for p in permutation.iter().permutations(T) {
+					let mut temp: L = 1.value_as().unwrap();
+					for (r, c) in p.iter().enumerate() {
+						temp = temp * self[(r, **c)];
+					}
+					out = out + perm_sign(p).value_as::<L>().unwrap() * temp;
+				}
+				out
 			}
-			if out % 2 == 0 { 1 } else { -1 }
 		}
-		let mut out = 0.value_as().unwrap();
-		let permutation = (0..T).collect::<Vec<usize>>();
-		for p in permutation.iter().permutations(T) {
-			let mut temp: L = 1.value_as().unwrap();
-			for (r, c) in p.iter().enumerate() {
-				temp = temp * self[(r, **c)];
-			}
-			out = out + perm_sign(p).value_as::<L>().unwrap() * temp;
-		}
-		out
 	}
 	
 	/// Returns the trace of a matrix
