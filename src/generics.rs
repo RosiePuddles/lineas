@@ -6,7 +6,7 @@
 use std::fmt::Debug;
 use crate::prelude::Matrix;
 use conv::{ConvUtil, ValueFrom};
-use crate::Angle;
+use crate::{Angle, Rotation};
 
 impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> where L: ValueFrom<isize> {
 	/// Generate an identity matrix of a specified size.
@@ -25,7 +25,7 @@ impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> where L: ValueFrom<isize> 
 	}
 }
 
-impl<L: Copy + Debug> Matrix<2, 2, L> where L: ValueFrom<f64> + ValueFrom<isize> {
+impl<L: Copy + Debug> Matrix<2, 2, L> where L: Rotation {
 	/// Generate a 2D rotation matrix for a specified angle
 	///
 	/// This will only work for a `Matrix<T, T, L>` matrix
@@ -33,9 +33,9 @@ impl<L: Copy + Debug> Matrix<2, 2, L> where L: ValueFrom<f64> + ValueFrom<isize>
 	/// # use lineas::prelude::Matrix;
 	/// assert_eq!(Matrix::new([[1, 0], [0, 1]]), Matrix::<2, 2, _>::identity())
 	/// ```
-	pub fn rotation(angle: Angle) -> Self {
+	pub fn rotation<Q: Rotation>(angle: Angle<Q>) -> Self {
 		let angle = angle.angle();
-		Matrix::new([[angle.cos(), -angle.sin()], [angle.sin(), angle.cos()]]).dtype::<L>()
+		Matrix::new([[L::back(angle.cos()), L::back(-angle.sin())], [L::back(angle.sin()), L::back(angle.cos())]])
 	}
 }
 

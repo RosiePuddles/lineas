@@ -35,6 +35,14 @@ pub trait Epsilon where Self: PartialEq {
 	fn epsilon(&self) -> Self;
 }
 
+/// Rotation trait
+pub trait Rotation {
+	/// Used to convert `&self` into an `f64`
+	fn conv(&self) -> f64;
+	/// Used to convert `&self` into an `f64`
+	fn back(t: f64) -> Self;
+}
+
 macro_rules! int {
     ($t:ty) => {
 		impl Abs for $t {
@@ -94,6 +102,14 @@ macro_rules! float {
 				if self.abs() < <$t>::EPSILON { 0. } else { *self }
 			}
 		}
+		impl Rotation for $t {
+			fn conv(&self) -> f64 {
+				*self as f64
+			}
+			fn back(t: f64) -> $t {
+				t as $t
+			}
+		}
 	};
 }
 
@@ -111,4 +127,3 @@ int_u!(u32);
 int_u!(u64);
 int_u!(u128);
 int_u!(usize);
-

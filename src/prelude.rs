@@ -5,7 +5,7 @@
 use std::fmt::Debug;
 use std::ops::Add;
 use conv::{ConvUtil, ValueFrom};
-use crate::traits::{Abs, Pows};
+use crate::traits::{Abs, Pows, Rotation};
 use crate::constants::PI;
 
 /// Matrix struct
@@ -85,21 +85,21 @@ pub struct Complex<L: Copy + Debug> {
 /// Angle enum
 ///
 /// Crate-wide enum for holding angles
-pub enum Angle {
+pub enum Angle<L: Rotation> {
 	/// Angle in degrees
-	Degrees(f64),
+	Degrees(L),
 	/// Angle in radians
-	Radians(f64),
+	Radians(L),
 	/// Angle in gradians
-	Gradians(f64)
+	Gradians(L)
 }
 
-impl Angle {
+impl<L: Rotation> Angle<L> {
 	pub(crate) fn angle(&self) -> f64 {
 		match self {
-			Angle::Degrees(v) => *v * PI / 180.,
-			Angle::Radians(v) => *v,
-			Angle::Gradians(v) => *v * PI / 50.
+			Angle::Degrees(v) => v.conv() * PI / 180.,
+			Angle::Radians(v) => v.conv(),
+			Angle::Gradians(v) => v.conv() * PI / 50.
 		}
 	}
 }
