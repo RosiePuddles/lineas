@@ -17,14 +17,21 @@ mod det {
 	}
 	
 	#[test]
-	fn random() {
-		let a = Matrix::new([
-			[1, 5, 3, 0],
-			[2, -9, -2, 10],
-			[11, 0, 5, -3],
-			[-7, 2, 4, -2]
-		]).dtype::<f32>();
-		assert_eq!(a.determinant(), -4111f32)
+	fn random_6() {
+		let a = Matrix::new([[-109, 16, -29, -21, -18], [-86, 88, -29, 50, -33], [59, 115, -93, 65, -101], [-43, -36, -72, 34, -69], [66, 71, 93, 103, -45]]);
+		assert_eq!(a.determinant(), -10037210765i64)
+	}
+	
+	#[test]
+	fn random_2() {
+		let a = Matrix::new([[-68, -23], [-74, 17]]);
+		assert_eq!(a.determinant(), -2858)
+	}
+	
+	#[test]
+	fn random_3() {
+		let a = Matrix::new([[-89, 44, -122], [52, 48, -39], [-26, -102, -112]]);
+		assert_eq!(a.determinant(), 1628210)
 	}
 }
 

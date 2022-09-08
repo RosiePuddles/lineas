@@ -44,6 +44,7 @@ pub type ColVector<const T: usize, L> = Matrix<T, 1, L>;
 ///
 /// The norm enum is used when calculating the norm of a vector with the [`norm`][Vector::norm]. This provides some set norms but
 /// also allows you to specify a custom norm.
+#[derive(Copy, Clone)]
 pub enum Norm<Q> {
 	/// Euclidean norm (square root of the sum of the squares)
 	Euclidean,

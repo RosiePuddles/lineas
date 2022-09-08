@@ -313,6 +313,39 @@ impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> {
 			}
 		}
 	}
+	
+	pub fn cofactor(&self, position: (usize, usize)) -> L where L: ValueFrom<isize> + Add<Output=L> + Mul<Output=L> + Sub<Output=L> {
+		let mut out = [[0.value_as().unwrap(); T]; T];
+		out[0][0] = 1.value_as().unwrap();
+		let mut row_iter = (0..T).collect::<Vec<usize>>();
+		row_iter.remove(position.0);
+		let mut col_iter = (0..T).collect::<Vec<usize>>();
+		col_iter.remove(position.1);
+		for (i, i_actual) in row_iter.iter().enumerate() {
+			for (n, n_actual) in col_iter.iter().enumerate() {
+				out[i + 1][n + 1] = self.0[*i_actual][*n_actual]
+			}
+		}
+		Matrix(out).determinant()
+	}
+	
+	pub fn cofactor_matrix(&self) -> Self where L: ValueFrom<isize> + Add<Output=L> + Mul<Output=L> + Sub<Output=L> + Neg<Output=L> {
+		let mut out = [[0.value_as().unwrap(); T]; T];
+		for i in 0..T {
+			for n in 0..T {
+				out[i][n] = if (n + i) % 2 == 0 {
+					self.cofactor((i, n))
+				} else {
+					-self.cofactor((i, n))
+				}
+			}
+		}
+		Matrix(out)
+	}
+	
+	pub fn adjoint(&self) -> Self where L: ValueFrom<isize> + Add<Output=L> + Mul<Output=L> + Sub<Output=L> + Neg<Output=L> {
+		self.cofactor_matrix().transpose()
+	}
 }
 
 /// # Elementwise operations

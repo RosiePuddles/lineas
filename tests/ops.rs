@@ -215,3 +215,23 @@ mod additive {
 		assert_eq!(lhs.diag(), rhs.diag())
 	}
 }
+
+#[cfg(test)]
+mod cofactors {
+	use super::*;
+	
+	#[test]
+	fn cofactor() {
+		let lhs = Matrix::new([[-67, 126, 15], [22, 22, -83], [61, -13, -119]]);
+		for (p, r) in [((0, 0), -3697), ((0, 1), 2445)] {
+			assert_eq!(lhs.cofactor(p), r)
+		}
+	}
+	
+	#[test]
+	fn adjoint() {
+		let lhs = Matrix::new([[-3, 2, -5], [-1, 0, -2], [3, -4, 1]]);
+		let rhs = Matrix::new([[-8, 18, -4], [-5, 12, -1], [4, -6, 2]]);
+		assert_eq!(lhs.adjoint(), rhs)
+	}
+}
