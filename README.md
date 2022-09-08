@@ -7,6 +7,8 @@
 
 This fast and simple-to-use library provides the ability to perform linear algebra within Rust. It provides matrices and vectors as well as complex numbers for all your computing needs.
 
+And with over 100 tests, you can spend more time writing code and less time submitting bug reports, confident that your code will be working properly.
+
 ## Examples
 ### Use lineas
 If you want to use a matrix, you ned to import it. Operations are included as default too.
