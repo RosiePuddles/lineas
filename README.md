@@ -1,8 +1,8 @@
 <div style="text-align: center;" align="center">
 <h1>Lineas</h1>
 <h3>Linear algebra in Rust</h3>
-<img src="https://img.shields.io/crates/v/lineas.svg" alt="crate.io version badge">
-<img src="https://img.shields.io/docsrs/lineas/latest" alt="docs.rs docs status badge">
+<a href="https://crates.io/crates/lineas"><img src="https://img.shields.io/crates/v/lineas.svg" alt="crate.io version badge"></a>
+<a href="https://docs.rs/lineas/latest"><img src="https://img.shields.io/docsrs/lineas/latest" alt="docs.rs docs status badge"></a>
 </div>
 
 This fast and simple-to-use library provides the ability to perform linear algebra within Rust. It provides matrices and vectors as well as complex numbers for all your computing needs.
