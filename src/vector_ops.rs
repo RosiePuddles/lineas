@@ -36,27 +36,6 @@ macro_rules! cvector {
     [$($x:expr),+ $(,)?] => { $crate::ColVector::new([$(([$x])),+]) };
 }
 
-/// # Complex value macro
-///
-/// This creates a [`Complex`] instance. You can pass in any of the following:
-/// - One value => [`Complex::from_real`]
-/// - Comma followed by one value => [`Complex::from_imaginary`]
-/// - Two values seperated by a comma => [`Complex::from_complex`]
-/// ```
-/// use lineas::{Complex, comp};
-/// assert_eq!(comp!(1), Complex::from_real(1));
-/// assert_eq!(comp!(,-3), Complex::from_imaginary(-3));
-/// assert_eq!(comp!(10, 4), Complex::from_complex(10, 4));
-/// ```
-///
-/// To use this macro you do not need to have `use lineas::Complex` in your file
-#[macro_export]
-macro_rules! comp {
-    ($x:expr) => { $crate::Complex::from_real($x) };
-	(,$x:expr) => { $crate::Complex::from_imaginary($x) };
-	($x:expr,$y:expr) => { $crate::Complex::from_complex($x, $y) };
-}
-
 impl<const T: usize, L: Copy + Debug> Vector<T, L> {
 	/// Calculate the dot product of two vectors
 	///

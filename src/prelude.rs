@@ -8,36 +8,15 @@ use conv::{ConvUtil, ValueFrom};
 use crate::traits::{Abs, Pows, Rotation};
 use crate::constants::PI;
 
-/// Matrix struct
-///
-/// A `Matrix<T, N, L>` contains an `[[L; N]; T]` array where `N` is the number of rows and `T` is
-/// the number of columns giving a `T`×`N` matrix
-///
-/// To make a new matrix, do [`Matrix::new(data)`][Matrix::new]. You can also specify the type of the data by
-/// following this with a call to the [`dtype`][Matrix::dtype] function.
-///
-/// For example
-/// ```
-/// use lineas::Matrix;
-/// let matrix: Matrix<2, 2, f64> = Matrix::new([[1, 0], [0, 1]]).dtype::<f64>();
-/// ```
-/// This gives us an identity matrix of size 2 with each value being an `f64` instead of `{integer}`
+#[doc = include_str!("../docs/matrix.md")]
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Matrix<const T: usize, const N: usize, L: Copy + Debug> (pub(crate) [[L; N]; T] );
 
-/// Vector struct
-///
-/// This is a row vector. For a column vector see the [`ColVector'][ColVector] struct
-///
-/// Derived from the [matrix][Matrix] and is technically a 1×`T` matrix
 #[doc(alias="RowVector")]
+#[doc = include_str!("../docs/vector.md")]
 pub type Vector<const T: usize, L> = Matrix<1, T, L>;
 
-/// Column Vector struct
-///
-/// For a row vector see the [`Vector'][Vector] struct
-///
-/// Derived from the [matrix][Matrix] and is technically a `T`×1 matrix
+#[doc = include_str!("../docs/colvector.md")]
 pub type ColVector<const T: usize, L> = Matrix<T, 1, L>;
 
 /// # Norm enum
@@ -81,6 +60,27 @@ impl<Q: Debug> Norm<Q> where Q: ValueFrom<isize> + Copy + Add<Output=Q> + Pows +
 pub struct Complex<L: Copy + Debug> {
 	pub(crate) real: L,
 	pub(crate) imaginary: L
+}
+
+/// # Complex value macro
+///
+/// This creates a [`Complex`] instance. You can pass in any of the following:
+/// - One value => [`Complex::from_real`]
+/// - Comma followed by one value => [`Complex::from_imaginary`]
+/// - Two values seperated by a comma => [`Complex::from_complex`]
+/// ```
+/// use lineas::{Complex, comp};
+/// assert_eq!(comp!(1), Complex::from_real(1));
+/// assert_eq!(comp!(,-3), Complex::from_imaginary(-3));
+/// assert_eq!(comp!(10, 4), Complex::from_complex(10, 4));
+/// ```
+///
+/// To use this macro you do not need to have `use lineas::Complex` in your file
+#[macro_export]
+macro_rules! comp {
+    ($x:expr) => { $crate::Complex::from_real($x) };
+	(,$x:expr) => { $crate::Complex::from_imaginary($x) };
+	($x:expr,$y:expr) => { $crate::Complex::from_complex($x, $y) };
 }
 
 /// Angle enum

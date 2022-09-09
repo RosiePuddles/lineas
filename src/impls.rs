@@ -345,6 +345,7 @@ impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> {
 		}
 	}
 	
+	/// Returns the cofactor for a given position
 	pub fn cofactor(&self, position: (usize, usize)) -> L where L: ValueFrom<isize> + Add<Output=L> + Mul<Output=L> + Sub<Output=L> + Neg<Output=L> {
 		let mut out = [[0.value_as().unwrap(); T]; T];
 		out[0][0] = 1.value_as().unwrap();
@@ -364,6 +365,7 @@ impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> {
 		}
 	}
 	
+	/// Returns the cofactor matrix for a square matrix
 	pub fn cofactor_matrix(&self) -> Self where L: ValueFrom<isize> + Add<Output=L> + Mul<Output=L> + Sub<Output=L> + Neg<Output=L> {
 		let mut out = [[0.value_as().unwrap(); T]; T];
 		for i in 0..T {
@@ -374,6 +376,9 @@ impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> {
 		Matrix(out)
 	}
 	
+	/// Return the adjoint matrix for a square matrix
+	///
+	/// this is equivalent to the cofactor matrix transformed
 	pub fn adjoint(&self) -> Self where L: ValueFrom<isize> + Add<Output=L> + Mul<Output=L> + Sub<Output=L> + Neg<Output=L> {
 		let mut out = [[0.value_as().unwrap(); T]; T];
 		for i in 0..T {
