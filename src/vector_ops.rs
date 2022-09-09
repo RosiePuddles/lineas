@@ -67,6 +67,20 @@ impl<const T: usize, L: Copy + Debug> Vector<T, L> {
 	pub fn norm(&self, norm: Norm<L>) -> L where L: ValueFrom<isize> + Copy + Add<Output=L> + Pows + Abs {
 		norm.call(self.0[0].clone().to_vec())
 	}
+	
+	/// Normalise a vector so that it's magnitude is 1.
+	///
+	/// This works best for floating point values. This function also uses the Euclidean norm for
+	/// calculating magnitude
+	pub fn normalise(&self) -> Self where L: Add<Output=L> + Mul<Output=L> + ValueFrom<isize> + Copy + Pows + Abs + Div<Output=L> {
+		let magnitude = self.magnitude();
+		let mut out = self.0.clone()[0];
+		for i in 0..T {
+			out[i] = out[i] / magnitude
+		}
+		Vector::new([out])
+	}
+	
 	/// Calculate the spherical liner interpolation between two vectors
 	///
 	/// This calculate the angle between then as θ, and then calculates
