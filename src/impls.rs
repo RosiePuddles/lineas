@@ -217,6 +217,15 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 		}
 		Matrix(out)
 	}
+	
+	/// Returns the dimension of the matrix `(rows, cols)`
+	pub fn dimension(&self) -> (usize, usize) { (T, N) }
+	
+	/// Returns the number of rows in the matrix
+	pub fn nrows(&self) -> usize { T }
+	
+	/// Returns the columns of rows in the matrix
+	pub fn ncols(&self) -> usize { N }
 }
 
 /// # Iterators
