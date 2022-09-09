@@ -2,6 +2,7 @@
 use crate::prelude::{Matrix, Vector};
 use std::fmt::Debug;
 use std::ops::{Add, Div, Mul, Neg, Sub};
+use std::slice::Iter;
 use conv::{ConvUtil, ValueFrom, ValueInto};
 use itertools::Itertools;
 use crate::{Complex, Norm, Pows};
@@ -215,6 +216,26 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 			}
 		}
 		Matrix(out)
+	}
+}
+
+/// # Iterators
+impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
+	/// Returns an iterator over the rows of a matrix
+	pub fn rows(&self) -> Iter<[L; N]> {
+		self.0.iter()
+	}
+}
+
+/// # Interpolations
+impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
+	/// Calculates the linear interpolation between two matrices
+	///
+	/// This does not constrict `t` to be between 0 and 1
+	pub fn lerp<Q: Copy + Debug, B>(&self, rhs: Matrix<T, N, Q>, t: B) -> Self where L: ValueFrom<Q> + ValueFrom<B> + ValueFrom<isize> + Add<Output=L> + Sub<Output=L> + Mul<Output=L> {
+		let rhs = rhs.dtype();
+		let t = t.value_as().unwrap();
+		self.scale(t) + rhs.scale(1.value_as::<L>().unwrap() - t)
 	}
 }
 

@@ -43,6 +43,26 @@ pub trait Rotation {
 	fn back(t: f64) -> Self;
 }
 
+/// Trigonometric trait
+///
+/// Required to allow us to use trig functions on matrices with generics in
+///
+/// This is implemented for `f32` and `f64` by default only
+pub trait Trig {
+	/// Returns the cosine of `self`
+	fn cos(&self) -> Self;
+	/// Returns the sine of `self`
+	fn sin(&self) -> Self;
+	/// Returns the tangent of `self`
+	fn tan(&self) -> Self;
+	/// Returns the inverse cosine of `self`
+	fn arccos(&self) -> Self;
+	/// Returns the inverse sine of `self`
+	fn arcsin(&self) -> Self;
+	/// Returns the inverse tangent of `self`
+	fn arctan(&self) -> Self;
+}
+
 macro_rules! int {
     ($t:ty) => {
 		impl Abs for $t {
@@ -84,31 +104,26 @@ macro_rules! int_u {
 macro_rules! float {
     ($t:ty) => {
 		impl Abs for $t {
-			fn absolute(&self) -> $t {
-				self.clone().abs()
-			}
+			fn absolute(&self) -> $t { self.clone().abs() }
 		}
 		impl Pows for $t {
-			fn power(&self, p: Self) -> $t {
-				self.powf(p)
-			}
-			
-			fn root_n(&self, p: Self) -> $t {
-				self.powf(1. / p)
-			}
+			fn power(&self, p: Self) -> $t { self.powf(p) }
+			fn root_n(&self, p: Self) -> $t { self.powf(1. / p) }
 		}
 		impl Epsilon for $t {
-			fn epsilon(&self) -> $t {
-				if self.abs() < <$t>::EPSILON { 0. } else { *self }
-			}
+			fn epsilon(&self) -> $t { if self.abs() < <$t>::EPSILON { 0. } else { *self } }
 		}
 		impl Rotation for $t {
-			fn conv(&self) -> f64 {
-				*self as f64
-			}
-			fn back(t: f64) -> $t {
-				t as $t
-			}
+			fn conv(&self) -> f64 { *self as f64 }
+			fn back(t: f64) -> $t { t as $t }
+		}
+		impl Trig for $t {
+			fn cos(&self) -> $t { <$t>::cos(*self) }
+			fn sin(&self) -> $t { <$t>::sin(*self) }
+			fn tan(&self) -> $t { <$t>::tan(*self) }
+			fn arccos(&self) -> $t { <$t>::acos(*self) }
+			fn arcsin(&self) -> $t { <$t>::asin(*self) }
+			fn arctan(&self) -> $t { <$t>::atan(*self) }
 		}
 	};
 }

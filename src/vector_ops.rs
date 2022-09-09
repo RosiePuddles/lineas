@@ -1,7 +1,7 @@
 use std::fmt::Debug;
-use std::ops::{Add, Mul, Neg, Sub};
+use std::ops::{Add, Div, Mul, Neg, Sub};
 use conv::{ConvUtil, ValueFrom};
-use crate::{Complex, Matrix, Norm, Vector};
+use crate::{Complex, Matrix, Norm, Trig, Vector};
 use crate::traits::{Abs, Pows};
 
 /// # Vector macro
@@ -87,6 +87,20 @@ impl<const T: usize, L: Copy + Debug> Vector<T, L> {
 	/// ```
 	pub fn norm(&self, norm: Norm<L>) -> L where L: ValueFrom<isize> + Copy + Add<Output=L> + Pows + Abs {
 		norm.call(self.0[0].clone().to_vec())
+	}
+	/// Calculate the spherical liner interpolation between two vectors
+	///
+	/// This calculate the angle between then as θ, and then calculates
+	/// (sin((1-t)θ) * self / sin(θ)) + (sin(tθ) * rhs / sin(θ)). This does not return a normalised
+	/// vector unless `self` and `rhs` were both normalised in which case it should. If you
+	/// experience errors with the result not being a unit vector then we recommend adding
+	/// [`.normalise()`][Vector::normalise] onto the end of your function call
+	pub fn slerp<Q: Copy + Debug, B>(&self, rhs: Vector<T, Q>, t: B) -> Self where L: ValueFrom<Q> + ValueFrom<B> + ValueFrom<isize> + Add<Output=L> + Sub<Output=L> + Mul<Output=L> + Div<Output=L> + Pows + Trig + Abs {
+		let lhs = self.normalise();
+		let rhs = rhs.dtype::<L>().normalise();
+		let theta: L = lhs.dot(rhs).arccos();
+		let t: L = t.value_as::<L>().unwrap();
+		self.scale(((1.value_as::<L>().unwrap() - t) * theta) / theta.sin()) + rhs.scale((t * theta) / theta.sin())
 	}
 }
 
