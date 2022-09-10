@@ -222,7 +222,7 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 	///
 	/// This makes use of the [epsilon filter][Matrix::epsilon_filter] function to check if two
 	/// matrices are within an acceptable distance of each other to be practically equivalent
-	pub fn fuzzy_eq(&self, rhs: Self) -> bool where L: Epsilon + PartialEq + Sub<Output=L> + Zero {
+	pub fn fuzzy_eq(&self, rhs: Self) -> bool where L: Epsilon + PartialEq + Sub<Output=L> + ValueFrom<isize> {
 		(*self - rhs).epsilon_filter() == Self::empty()
 	}
 	
