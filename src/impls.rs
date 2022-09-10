@@ -204,7 +204,7 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 	/// This is intended for use with function that will inherently be slightly inaccurate such
 	/// trigonometric function. A good sample use would be rotation matrices
 	/// ```
-	/// # use lineas::prelude::Matrix;
+	/// # use lineas::Matrix;
 	/// use lineas::Angle;
 	/// Matrix::rotation(Angle::Degrees(180.)).epsilon_filter()
 	/// ```
@@ -216,6 +216,14 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 			}
 		}
 		Matrix(out)
+	}
+	
+	/// Fuzzy equality operator for use with values that can be slightly inaccurate
+	///
+	/// This makes use of the [epsilon filter][Matrix::epsilon_filter] function to check if two
+	/// matrices are within an acceptable distance of each other to be practically equivalent
+	pub fn fuzzy_eq(&self, rhs: Self) -> bool where L: Epsilon + PartialEq + Sub<Output=L> + Zero {
+		(*self - rhs).epsilon_filter() == Self::empty()
 	}
 	
 	/// Returns the dimension of the matrix `(rows, cols)`

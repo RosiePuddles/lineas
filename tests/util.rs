@@ -1,4 +1,5 @@
 use lineas::{Matrix, Complex, comp};
+mod qol;
 
 #[cfg(test)]
 mod conjugate {
@@ -103,5 +104,64 @@ mod min_max {
 			Matrix::new([[6, -120, 23], [-72, -32, -88], [102, 2, -20]]).min_max_row(Norm::Manhattan),
 			(vector![102, 2, -20], vector![102, 2, -20])
 		)
+	}
+}
+
+#[cfg(test)]
+mod interpolation {
+	use lineas::vector;
+	use super::*;
+	
+	#[test]
+	fn lerp() {
+		let lhs = Matrix::empty();
+		let rhs = Matrix::new([[1, 1, 1], [1, 1, 1], [1, 1, 1]]).dtype::<f32>();
+		let res = Matrix::new([[0.5, 0.5, 0.5], [0.5, 0.5, 0.5], [0.5, 0.5, 0.5]]);
+		assert_eq!(lhs.lerp(rhs, 0.5), res)
+	}
+	
+	#[cfg(test)]
+	mod slerp {
+		use super::*;
+		
+		#[test]
+		fn i_j_slerp() {
+			let lhs = vector![1, 0, 0].dtype::<f32>();
+			let rhs = vector![0, 1, 0].dtype::<f32>();
+			let res = vector![1. / 2f32.sqrt(), 1. / 2f32.sqrt(), 0.];
+			fuzzy_eq!(lhs.slerp(rhs, 0.5), res)
+		}
+		
+		#[test]
+		fn i_neg_i_slerp() {
+			let lhs = vector![1, 0, 0].dtype::<f32>();
+			let rhs = vector![-1, 0, 0].dtype::<f32>();
+			let res = vector![0.5, 0., 0.];
+			fuzzy_eq!(lhs.slerp(rhs, 0.25), res)
+		}
+		
+		#[test]
+		fn i_scale_i_slerp() {
+			let lhs = vector![1, 0, 0].dtype::<f32>();
+			let rhs = vector![2, 0, 0].dtype::<f32>();
+			let res = vector![1.5, 0., 0.];
+			fuzzy_eq!(lhs.slerp(rhs, 0.5), res)
+		}
+	}
+}
+
+#[cfg(test)]
+mod iterators {
+	use super::*;
+	
+	#[test]
+	fn rows() {
+		let a = Matrix::new([[-68, -61, 89], [-117, -28, 75], [90, 123, -67]]);
+		let mut a_rows = a.rows();
+		assert_eq!(a_rows.next(), Some(&[-68, -61, 89]));
+		assert_eq!(a_rows.next(), Some(&[-117, -28, 75]));
+		assert_eq!(a_rows.next(), Some(&[90, 123, -67]));
+		assert_eq!(a_rows.next(), None);
+		assert_eq!(a, Matrix::new([[-68, -61, 89], [-117, -28, 75], [90, 123, -67]]))
 	}
 }

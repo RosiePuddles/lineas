@@ -9,8 +9,8 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Add<Matrix<T, N, L>> for M
 	
 	fn add(self, rhs: Self) -> Self::Output {
 		let mut out = self.0.clone();
-		for i in 0..N {
-			for n in 0..T {
+		for i in 0..T {
+			for n in 0..N {
 				out[i][n] = rhs.0[i][n] + self.0[i][n]
 			}
 		}
@@ -20,8 +20,8 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Add<Matrix<T, N, L>> for M
 
 impl<const T: usize, const N: usize, L: Copy + Debug> AddAssign<Matrix<T, N, L>> for Matrix<T, N, L> where L: Add<Output=L> {
 	fn add_assign(&mut self, rhs: Self) {
-		for i in 0..N {
-			for n in 0..T {
+		for i in 0..T {
+			for n in 0..N {
 				self[(i, n)] = self[(i, n)] + rhs[(i, n)]
 			}
 		}
@@ -33,8 +33,8 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Sub<Matrix<T, N, L>> for M
 	
 	fn sub(self, rhs: Self) -> Self::Output {
 		let mut out = self.0.clone();
-		for i in 0..N {
-			for n in 0..T {
+		for i in 0..T {
+			for n in 0..N {
 				out[i][n] = self.0[i][n] - rhs.0[i][n]
 			}
 		}
@@ -44,8 +44,8 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Sub<Matrix<T, N, L>> for M
 
 impl<const T: usize, const N: usize, L: Copy + Debug> SubAssign<Matrix<T, N, L>> for Matrix<T, N, L> where L: Sub<Output=L> {
 	fn sub_assign(&mut self, rhs: Self) {
-		for i in 0..N {
-			for n in 0..T {
+		for i in 0..T {
+			for n in 0..N {
 				self[(i, n)] = self[(i, n)] - rhs[(i, n)]
 			}
 		}

@@ -88,12 +88,21 @@ impl<const T: usize, L: Copy + Debug> Vector<T, L> {
 	/// vector unless `self` and `rhs` were both normalised in which case it should. If you
 	/// experience errors with the result not being a unit vector then we recommend adding
 	/// [`.normalise()`][Vector::normalise] onto the end of your function call
-	pub fn slerp<Q: Copy + Debug, B>(&self, rhs: Vector<T, Q>, t: B) -> Self where L: ValueFrom<Q> + ValueFrom<B> + ValueFrom<isize> + Add<Output=L> + Sub<Output=L> + Mul<Output=L> + Div<Output=L> + Pows + Trig + Abs {
+	///
+	/// If the vectors are similar (i.e. self = a * rhs for some scalar value a), the function returns the linear interpolation between them
+	pub fn slerp<Q: Copy + Debug, B>(&self, rhs: Vector<T, Q>, t: B) -> Self where L: ValueFrom<Q> + ValueFrom<B> + ValueFrom<isize> + Add<Output=L> + Sub<Output=L> + Mul<Output=L> + Div<Output=L> + Pows + Trig + Abs + PartialEq {
 		let lhs = self.normalise();
-		let rhs = rhs.dtype::<L>().normalise();
-		let theta: L = lhs.dot(rhs).arccos();
-		let t: L = t.value_as::<L>().unwrap();
-		self.scale(((1.value_as::<L>().unwrap() - t) * theta) / theta.sin()) + rhs.scale((t * theta) / theta.sin())
+		let rhs = rhs.dtype::<L>();
+		let t = t.value_as().unwrap();
+		let cos_theta = lhs.dot(rhs.normalise());
+		if cos_theta.absolute() == 1.value_as().unwrap() {
+			return rhs.scale(t) + self.scale(1.value_as::<L>().unwrap() - t)
+		}
+		let theta = cos_theta.arccos();
+		(
+			self.scale(((1.value_as::<L>().unwrap() - t) * theta).sin()) +
+				rhs.scale((t * theta).sin())
+		).scale(theta.sin())
 	}
 }
 
