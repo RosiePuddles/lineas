@@ -11,6 +11,7 @@ homepage = "https://github.com/RosiePuddles/lineas"
 documentation = "https://docs.rs/lineas/latest"
 readme = "README.md"
 keywords = ["maths", "linear-algebra", "algebra", "matrix", "vector"]
+include = ["src", "docs"]
 
 [badges]
 maintenance = { status = "actively-developed" }

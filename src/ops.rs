@@ -52,7 +52,7 @@ impl<const T: usize, const N: usize, L: Copy + Debug> SubAssign<Matrix<T, N, L>>
 	}
 }
 
-impl<const T: usize, const N: usize, const P: usize, L: Copy + Debug + ValueFrom<isize>> Mul<Matrix<N, P, L>> for Matrix<T, N, L> where L: Add<Output=L> + Mul<Output=L> + ValueFrom<isize> {
+impl<const T: usize, const N: usize, const P: usize, L: Copy + Debug> Mul<Matrix<N, P, L>> for Matrix<T, N, L> where L: Add<Output=L> + Mul<Output=L> + ValueFrom<isize> {
 	type Output = Matrix<T, P, L>;
 	
 	/// Multiply two matrices together
@@ -93,14 +93,14 @@ impl<const T: usize, const N: usize, L: Copy + Debug + ValueFrom<isize>> MulAssi
 	}
 }
 
-impl<const T: usize, const N: usize, L: Copy + Debug> Neg for Matrix<T, N, L> where L: Add<Output=L> + ValueFrom<isize> + Mul<Output=L> {
+impl<const T: usize, const N: usize, L: Copy + Debug> Neg for Matrix<T, N, L> where L: Add<Output=L> + Neg<Output=L> + Mul<Output=L> {
 	type Output = Self;
 	
 	fn neg(self) -> Self::Output {
 		let mut data = self.0.clone();
 		for i in 0..T {
 			for j in 0..N {
-				data[i][j] = data[i][j] * (-1).value_as::<L>().unwrap();
+				data[i][j] = -data[i][j];
 			}
 		}
 		Matrix::new(data)
@@ -110,6 +110,10 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Neg for Matrix<T, N, L> wh
 impl<const T: usize, const N: usize, L: Copy + Debug> Index<(usize, usize)> for Matrix<T, N, L> {
 	type Output = L;
 	
+	/// This will panic is the requested value is outside of the matrix
+	///
+	/// If run in debug mode, it will check if it will panic and give a more descriptive panic
+	/// message than in release mode
 	fn index(&self, index: (usize, usize)) -> &Self::Output {
 		#[cfg(debug_assertions)]
 		if index.0 >= T {
@@ -124,6 +128,10 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Index<(usize, usize)> for 
 }
 
 impl<const T: usize, const N: usize, L: Copy + Debug> IndexMut<(usize, usize)> for Matrix<T, N, L> {
+	/// This will panic is the requested value is outside of the matrix
+	///
+	/// If run in debug mode, it will check if it will panic and give a more descriptive panic
+	/// message than in release mode
 	fn index_mut(&mut self, index: (usize, usize)) -> &mut Self::Output {
 		#[cfg(debug_assertions)]
 		if index.0 >= T {
