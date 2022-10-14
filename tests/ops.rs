@@ -199,14 +199,14 @@ mod indexing {
 		use super::*;
 		
 		#[test]
-		#[should_panic(expected = "Matrix has size 2×3. Row 4 is outside range 0 to 2")]
+		#[should_panic]
 		fn outside_row() {
 			let lhs = Matrix::new([[-3, 4, 0], [2, 1, -2]]);
 			lhs[(4, 0)];
 		}
 		
 		#[test]
-		#[should_panic(expected = "Matrix has size 2×3. Column 3 is outside range 0 to 3")]
+		#[should_panic]
 		fn outside_col() {
 			let lhs = Matrix::new([[-3, 4, 0], [2, 1, -2]]);
 			lhs[(1, 3)];
@@ -284,9 +284,60 @@ mod cofactors {
 	}
 }
 
+#[cfg(test)]
+mod scale {
+	use super::*;
+	
+	#[test]
+	fn scale() {
+		let lhs = Matrix::new([[88, 35, 20], [-31, 91, 18], [15, -62, -101]]);
+		let rhs = Matrix::new([[-6072, -2415, -1380], [2139, -6279, -1242], [-1035, 4278, 6969]]);
+		assert_eq!(lhs.scale(-69), rhs)
+	}
+	
+	#[test]
+	fn scale_set() {
+		let mut lhs = Matrix::new([[-125, 108, 79, -50], [115, -22, -75, -4], [125, -110, 19, 35], [-12, 76, 16, 33]]);
+		let rhs = Matrix::new([[625, -540, -395, 250], [-575, 110, 375, 20], [-625, 550, -95, -175], [60, -380, -80, -165]]);
+		lhs.scale_set(-5);
+		assert_eq!(lhs, rhs)
+	}
+}
+
+#[test]
+fn abs() {
+	let lhs = Matrix::new([[-102, 6, 66], [33, 7, 3], [-10, -41, -126], [-71, -46, -39]]);
+	let rhs = Matrix::new([[102, 6, 66], [33, 7, 3], [10, 41, 126], [71, 46, 39]]);
+	assert_eq!(lhs.abs(), rhs)
+}
+
 #[test]
 fn diag() {
 	let lhs = Matrix::new([[0, 12, 5], [3, -2, 4], [10, 15, 3]]);
 	let rhs = Matrix::new([[0, -2, 3], [-9, -2, 0], [15, -4, 3]]);
 	assert_eq!(lhs.diag(), rhs.diag())
+}
+
+#[cfg(test)]
+mod log {
+	use super::*;
+	
+	#[test]
+	fn valid() {
+		let a = Matrix::new([[1, 2], [3, 4]]).dtype::<f32>();
+		let b = Matrix::new([[0., 0.69314724], [1.0986124, 1.3862945]]);
+		assert!(a.log().unwrap().fuzzy_eq(b))
+	}
+	
+	#[test]
+	fn invalid_zero() {
+		let a = Matrix::new([[1, 0], [3, 4]]).dtype::<f32>();
+		assert!(a.log().is_none())
+	}
+	
+	#[test]
+	fn invalid_negative() {
+		let a = Matrix::new([[1, -3], [2, 4]]).dtype::<f32>();
+		assert!(a.log().is_none())
+	}
 }

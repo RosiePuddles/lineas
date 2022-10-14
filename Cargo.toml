@@ -20,6 +20,7 @@ maintenance = { status = "actively-developed" }
 conv = "0.3.3"
 itertools = "0.10.3"
 num-integer = "0.1.45"
+num-traits = "0.2.15"
 plotters = { version = "0.3.3", optional = true}
 
 [features]

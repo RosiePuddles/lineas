@@ -5,6 +5,7 @@ use std::ops::{Add, Div, Mul, Neg, Sub};
 use std::slice::Iter;
 use conv::{ConvUtil, ValueFrom, ValueInto};
 use itertools::Itertools;
+use num_traits::real::Real;
 use crate::{Complex, Norm, Pows};
 use crate::traits::{Abs, Epsilon};
 
@@ -119,8 +120,8 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 	/// Return the matrix with the elementwise absolute values
 	pub fn abs(&self) -> Self where L: Abs {
 		let mut out = self.0.clone();
-		for i in 0..N {
-			for j in 0..T {
+		for i in 0..T {
+			for j in 0..N {
 				out[i][j] = out[i][j].absolute()
 			}
 		}
@@ -156,6 +157,21 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 			}
 		}
 		Matrix::new(data)
+	}
+	
+	/// Returns the elementwise natural logarithm of a matrix
+	///
+	/// Will return `None` if any value is not greater than 0
+	pub fn log(&self) -> Option<Self> where L: Real + ValueFrom<f32> + PartialOrd {
+		let e = std::f32::consts::E.value_as().unwrap();
+		let mut out = self.0.clone();
+		for i in 0..T {
+			for j in 0..N {
+				if out[i][j] <= L::zero() { return None }
+				out[i][j] = out[i][j].log(e)
+			}
+		}
+		Some(Matrix::new(out))
 	}
 	
 	/// Scale the matrix
