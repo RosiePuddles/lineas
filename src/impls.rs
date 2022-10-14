@@ -416,12 +416,72 @@ impl<const T: usize, L: Copy + Debug> Matrix<T, T, L> {
 
 /// # Elementwise operations
 impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
+	/// Elementwise addition
+	///
+	/// Adds a scalar to each element in the matrix
+	///
+	/// For an assigning with a mutable matrix see [`Matrix::elem_add_assign`]
+	pub fn elem_add<Q>(&self, rhs: Q) -> Self where L: ValueFrom<Q> + Add<Output=L> {
+		let rhs = rhs.value_as::<L>().unwrap();
+		let mut out = self.0.clone();
+		for i in 0..T {
+			for n in 0..N {
+				out[i][n] = out[i][n] + rhs
+			}
+		}
+		Matrix(out)
+	}
+	
+	/// Elementwise addition
+	///
+	/// Adds a scalar to each element in the matrix and assigns the result to `self`
+	///
+	/// For a non-assigning version see [`Matrix::elem_add`]
+	pub fn elem_add_assign<Q>(&mut self, rhs: Q) where L: ValueFrom<Q> + Add<Output=L> {
+		let rhs = rhs.value_as::<L>().unwrap();
+		for i in 0..T {
+			for n in 0..N {
+				self.0[i][n] = self.0[i][n] + rhs
+			}
+		}
+	}
+	
+	/// Elementwise subtraction
+	///
+	/// Subtracts a scalar to each element in the matrix
+	///
+	/// For an assigning with a mutable matrix see [`Matrix::elem_sub_assign`]
+	pub fn elem_sub<Q>(&self, rhs: Q) -> Self where L: ValueFrom<Q> + Sub<Output=L> {
+		let rhs = rhs.value_as::<L>().unwrap();
+		let mut out = self.0.clone();
+		for i in 0..T {
+			for n in 0..N {
+				out[i][n] = out[i][n] - rhs
+			}
+		}
+		Matrix(out)
+	}
+	
+	/// Elementwise subtraction
+	///
+	/// Subtracts a scalar to each element in the matrix and assigns the result to `self`
+	///
+	/// For a non-assigning version see [`Matrix::elem_sub`]
+	pub fn elem_sub_assign<Q>(&mut self, rhs: Q) where L: ValueFrom<Q> + Sub<Output=L> {
+		let rhs = rhs.value_as::<L>().unwrap();
+		for i in 0..T {
+			for n in 0..N {
+				self.0[i][n] = self.0[i][n] - rhs
+			}
+		}
+	}
+	
 	/// Elementwise multiplication
 	///
 	/// Returns the result of elementwise multiplication
 	///
 	/// For an assigning with a mutable matrix see [`Matrix::elem_mult_assign`]
-	pub fn elem_mult<Q: Copy + Debug>(&self, rhs: Matrix<T, N, Q>) -> Self where Q: Mul<Output=Self>, L: ValueFrom<Q> + ValueFrom<isize> + Mul<Output=L> {
+	pub fn elem_mult<Q: Copy + Debug>(&self, rhs: Matrix<T, N, Q>) -> Self where L: ValueFrom<Q> + ValueFrom<isize> + Mul<Output=L> {
 		let rhs = rhs.dtype::<L>().0;
 		let mut out = self.0.clone();
 		for i in 0..T {
@@ -437,7 +497,7 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 	/// Assigns the result of elementwise multiplication to `self`
 	///
 	/// For a non-assigning version see [`Matrix::elem_mult`]
-	pub fn elem_mult_assign<Q: Copy + Debug>(&mut self, rhs: Matrix<T, N, Q>) where Q: Mul<Output=Self>, L: ValueFrom<Q> + ValueFrom<isize> + Mul<Output=L> {
+	pub fn elem_mult_assign<Q: Copy + Debug>(&mut self, rhs: Matrix<T, N, Q>) where L: ValueFrom<Q> + ValueFrom<isize> + Mul<Output=L> {
 		for i in 0..T {
 			let rhs = rhs.dtype::<L>().0;
 			for n in 0..N {
@@ -451,7 +511,7 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 	/// Returns the result of elementwise division
 	///
 	/// For an assigning with a mutable matrix see [`Matrix::elem_div_assign`]
-	pub fn elem_div<Q: Copy + Debug>(&self, rhs: Matrix<T, N, Q>) -> Self where Q: Div<Output=Self>, L: ValueFrom<Q> + ValueFrom<isize> + Div<Output=L> {
+	pub fn elem_div<Q: Copy + Debug>(&self, rhs: Matrix<T, N, Q>) -> Self where L: ValueFrom<Q> + ValueFrom<isize> + Div<Output=L> {
 		let rhs = rhs.dtype::<L>().0;
 		let mut out = self.0.clone();
 		for i in 0..T {
@@ -467,7 +527,7 @@ impl<const T: usize, const N: usize, L: Copy + Debug> Matrix<T, N, L> {
 	/// Assigns the result of elementwise division to `self`
 	///
 	/// For a non-assigning version see [`Matrix::elem_div`]
-	pub fn elem_div_assign<Q: Copy + Debug>(&mut self, rhs: Matrix<T, N, Q>) where Q: Div<Output=Self>, L: ValueFrom<Q> + ValueFrom<isize> + Div<Output=L> {
+	pub fn elem_div_assign<Q: Copy + Debug>(&mut self, rhs: Matrix<T, N, Q>) where L: ValueFrom<Q> + ValueFrom<isize> + Div<Output=L> {
 		for i in 0..T {
 			let rhs = rhs.dtype::<L>().0;
 			for n in 0..N {
